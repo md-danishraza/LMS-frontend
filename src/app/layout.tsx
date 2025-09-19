@@ -1,0 +1,44 @@
+import type { Metadata } from "next";
+import { DM_Sans} from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import Providers from "./providers";
+
+const dmSans = DM_Sans({
+  subsets:["latin"],
+  display:"swap",
+  variable:"--font-dm-sans"
+})
+
+export const metadata: Metadata = {
+  title: "LMS",
+  description: "Learning management System - edtech",
+  icons:{
+    icon:"/favicon.png"
+  }
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning >
+      <body
+        className={`${dmSans.className}`}
+      >
+       <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Providers>
+            {children}
+            </Providers>
+          </ThemeProvider>
+      </body>
+    </html>
+  );
+}
