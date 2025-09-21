@@ -22,6 +22,7 @@ const store = configureStore({
 });
 
 export type RootState = ReturnType<typeof store.getState>;
+// create a custom useDispatch hook 
 export type AppDispatch = typeof store.dispatch;
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
