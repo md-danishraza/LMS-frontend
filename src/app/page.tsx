@@ -1,5 +1,7 @@
-import NonDashboardNavbar from "@/components/NonDashboardNavbar";
 
+import NonDashboardNavbar from "@/components/NonDashboardNavbar";
+import Landing from "./(NonDashboard)/landing/page";
+import Footer from "@/components/Footer";
 
 
 export default function Home() {
@@ -8,9 +10,12 @@ export default function Home() {
       <NonDashboardNavbar/>
       <main className=" flex flex-grow w-full h-full justify-center items-center">
         {/* landing */}
-        <h1 className="text-center text-4xl font-primary">Hello world</h1>
+        <Landing/>
+        
+        
       </main>
       {/* footer */}
+      <Footer/>
     </div>
   );
 }
