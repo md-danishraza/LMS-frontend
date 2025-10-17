@@ -15,6 +15,12 @@ declare global {
       userId: string;
     }>;
   }
+
+  interface SearchCourseCardProps {
+    course: Course;
+    isSelected?: Boolean;
+    onClick?: () => void;
+  }
 }
 
 export {};

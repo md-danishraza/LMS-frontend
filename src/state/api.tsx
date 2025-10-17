@@ -1,21 +1,69 @@
 // state/api.tsx
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import { BaseQueryApi,FetchArgs } from "@reduxjs/toolkit/query/react";
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+import {toast} from "sonner";
 
-export const baseQuery = fetchBaseQuery({
-  baseUrl,
-  credentials: "include", // optional: for cookies/auth
-  prepareHeaders: (headers) => {
-    // Add auth token or custom headers here
-    headers.set("Accept", "application/json");
-    return headers;
-  },
-});
+const customBaseQuery = async (
+  args: string | FetchArgs,
+  api: BaseQueryApi,
+  extraOptions: any
+) => {
+  const baseQuery = fetchBaseQuery({
+    baseUrl: baseUrl,
+    // prepareHeaders: async (headers) => {
+    //   const token = await window.Clerk?.session?.getToken();
+    //   if (token) {
+    //     headers.set("Authorization", `Bearer ${token}`);
+    //   }
+    //   return headers;
+    // },
+  });
+
+  try {
+    const result: any = await baseQuery(args, api, extraOptions);
+
+    // error toast
+    if (result.error) {
+      const errorData = result.error.data;
+      const errorMessage =
+        errorData?.message ||
+        result.error.status.toString() ||
+        "An error occurred";
+      toast.error(`Error: ${errorMessage}`);
+    }
+
+    // mutation toast
+    const isMutationRequest =
+      (args as FetchArgs).method && (args as FetchArgs).method !== "GET";
+    if (isMutationRequest) {
+      const successMessage = result.data?.message;
+      if (successMessage) toast.success(successMessage);
+    }
+
+    // returning data.data
+    if (result.data) {
+      result.data = result.data.data;
+    } else if (
+      // no content return
+      result.error?.status === 204 ||
+      result.meta?.response?.status === 24
+    ) {
+      return { data: null };
+    }
+
+    return result;
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    return { error: { status: "FETCH_ERROR", error: errorMessage } };
+  }
+};
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery,
+  baseQuery:customBaseQuery,
   tagTypes:["Courses"],
   endpoints: (builder) => ({
     // query<returnType,inputType>
