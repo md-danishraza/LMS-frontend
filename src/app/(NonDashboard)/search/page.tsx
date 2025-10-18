@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import {motion} from "framer-motion";
 import CourseCardSearch from '@/components/CourseCardSearch';
+import SelectedCourse from './SelectedCourse';
 function SearchPage() {
     const searchParams = useSearchParams()
     const id = searchParams.get("id");
@@ -23,11 +24,21 @@ function SearchPage() {
 
             }
         }
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
     },[courses,id])
 
+    // update the current selected course state
     function handleCourseSelect(course: Course): void {
         setSelectedCourse(course)
-        router.push(`/search?id=${course.courseId}`);
+        router.push(`/search?id=${course.courseId}`,{scroll:false});
+    }
+
+    // handling enroll course click
+    const handleEnroll= (courseId:string)=>{
+        router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`)
     }
 
   if (isLoading) return <Loader/>
@@ -39,7 +50,7 @@ function SearchPage() {
     transition={{duration:.5}}
     className=' flex flex-col bg-background text-foreground h-full mx-auto w-3/4'
     >
-        <h1 className='font-normal font-primary text-2xl mt-14'>List of available courses</h1>
+        <h1 className='font-normal font-primary text-2xl mt-8'>List of available courses</h1>
         <h2 className='text-gray-500 mb-3'>{courses.length} courses available</h2>
 
         <div className=' w-full flex flex-col-reverse md:flex-row pb-8 pt-2 gap-8'>
@@ -62,6 +73,25 @@ function SearchPage() {
                         )
                     })
                 }
+            </motion.div>
+
+            {/* selected course card */}
+            <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 ,delay:0.5}}
+            className='basis-2/5 min-w-[350px] h-fit border-2 border-primary bg-secondary overflow-hidden rounded-lg'
+            >
+                {
+                    selectedCourse && (
+                        <SelectedCourse
+                    course={selectedCourse}
+                    handleEnrollNow={handleEnroll}
+                        />
+                    )
+                }
+
+
             </motion.div>
 
         </div>

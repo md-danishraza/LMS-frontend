@@ -28,7 +28,7 @@ function CourseCardSearch({course,isSelected,onClick}:SearchCourseCardProps) {
         <div className='mt-2'>
             <p className='text-gray-500 text-sm'>{course.teacherName}</p>
             <div className=' flex justify-between items-center mt-1'>
-                <span className='text-primary font-semibold'>
+                <span className='text-primary dark:text-foreground  font-semibold text'>
                     {formatPrice(course.price)}
                 </span>
                 <span className='text-gray-500 text-sm'>

@@ -21,6 +21,32 @@ declare global {
     isSelected?: Boolean;
     onClick?: () => void;
   }
+
+  interface Chapter {
+    chapterId: string;
+    title: string;
+    content: string;
+    video?: string | File;
+    freePreview?: boolean;
+    type: "Text" | "Quiz" | "Video";
+  }
+
+  interface ChapterProgress {
+    chapterId: string;
+    completed: boolean;
+  }
+
+  interface SectionProgress {
+    sectionId: string;
+    chapters: ChapterProgress[];
+  }
+
+  interface Section {
+    sectionId: string;
+    sectionTitle: string;
+    sectionDescription?: string;
+    chapters: Chapter[];
+  }
 }
 
 export {};
