@@ -9,10 +9,10 @@ type SelectedCourseProp = {
 
 function SelectedCourse({course,handleEnrollNow}:SelectedCourseProp) {
   return (
-    <div className=' overflow-hidden p-9'>
+    <div className=' overflow-hidden p-2 sm:p-9'>
         {/* title */}
       <div>
-        <h3 className='text-white-50 font-primary font-semibold text-3xl'>{course.title}</h3>
+        <h3 className='text-white-50 font-primary text-wrap font-semibold text-3xl'>{course.title}</h3>
         <p className='text-gray-400 text-sm pt-3'>
             By {course.teacherName} | {" "}
             <span className='font-bold text-gray-500 dark:text-white'>
@@ -23,16 +23,16 @@ function SelectedCourse({course,handleEnrollNow}:SelectedCourseProp) {
 
       {/* content */}
       <div className='mt-5'>
-        <p className='text-gray-500 mb-2'>{course.description}</p>
+        <p className='text-gray-500 text-wrap mb-2'>{course.description}</p>
 
         <div className='mt-5'>
-            <h4 className='text-white-50/90 font-semibold mb-2'>Course contents</h4>
+            <h4 className=' font-semibold mb-2'>Course contents</h4>
             <AccordianSections sections={course.sections}/>
         </div>
       </div>
 
       {/* footer */}
-      <div className='flex justify-between items-center mt-5'>
+      <div className='flex justify-between   items-center mt-5'>
         <span className='text-primary dark:text-foreground  font-semibold text-shadow'>
             {formatPrice(course.price)}
         </span>

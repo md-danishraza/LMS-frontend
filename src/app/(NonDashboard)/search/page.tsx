@@ -48,10 +48,10 @@ function SearchPage() {
     initial={{opacity:0}}
     animate={{opacity:1}}
     transition={{duration:.5}}
-    className=' flex flex-col bg-background text-foreground h-full mx-auto w-3/4'
+    className=' flex flex-col bg-background text-foreground h-full mx-auto w-4/5'
     >
-        <h1 className='font-normal font-primary text-2xl mt-8'>List of available courses</h1>
-        <h2 className='text-gray-500 mb-3'>{courses.length} courses available</h2>
+        <h1 className='font-bold  font-primary text-3xl mt-8 '>List of available courses</h1>
+        <h2 className='text-gray-500 mb-3 border-b-1 border-primary'>{courses.length} courses available</h2>
 
         <div className=' w-full flex flex-col-reverse md:flex-row pb-8 pt-2 gap-8'>
 
@@ -80,7 +80,7 @@ function SearchPage() {
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 ,delay:0.5}}
-            className='basis-2/5 min-w-[350px] h-fit border-2 border-primary bg-secondary overflow-hidden rounded-lg'
+            className='basis-2/5 min-w-[300px] h-fit border-2 border-primary bg-secondary overflow-hidden rounded-lg'
             >
                 {
                     selectedCourse && (

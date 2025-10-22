@@ -10,6 +10,7 @@ import {
     PopoverContent,
     PopoverTrigger,
   } from "@/components/ui/popover"
+import { Logo } from './Logo';
 function NonDashboardNavbar() {
   return (
     <nav className='w-full flex justify-center bg-background border-b shadow
@@ -18,13 +19,14 @@ function NonDashboardNavbar() {
         <div className='flex justify-between items-center w-3/4 py-8 '>
             <div className='flex justify-between items-center gap-14'>
             {/* brand logo */}
-            <Link href={`/`} className='font-bold text-lg text-primary sm:text-xl hover:text-secondary'>
+            {/* <Link href={`/`} className='font-bold text-lg text-primary sm:text-xl hover:text-secondary'>
             LMS
-            </Link> 
+            </Link>  */}
+            <Logo/>
 
             <div className='flex items-center gap-4'>
                 <div className='relative group '>
-                    <Link href={`/search`} className='pl-10 sm:pl-14 pr-6 sm:pr-20 py-3 sm:py-4 rounded-xl bg-muted hover:text-muted-foreground transition-all duration-300 text-sm sm:text-base'>
+                    <Link href={`/search`} className='pl-10 sm:pl-14 pr-6 sm:pr-10 py-3 sm:py-4 rounded-xl bg-muted hover:text-muted-foreground transition-all duration-300 text-sm sm:text-base'>
                         <span className='hidden sm:inline'>Search Courses</span>
                         <span className='sm:hidden'>Search</span>
                     </Link>

@@ -52,25 +52,29 @@ function Landing() {
         className='flex justify-between items-center mt-12 h-[500px] rounded-lg bg-secondary'
     >
         {/* content section */}
-        <div className='basis-1/2 px-16 mx-auto'>
-            <h1 className='text-4xl font-bold mb-4'>Courses</h1>
-            <p className='text-lg text-gray-400 mb-8'>
-                This is the list of courses that you can enroll in.
-                <br />
-                Courses when you need them and want them.
-            </p>
-            {/* CTA */}
-            <div className='w-fit'>
-                <Link href={`/search`} >
-                    <Button variant={'default'} className='cursor-pointer text-white hover:bg px-4 py-2 rounded-md'>
-                        <BookOpenCheck/>
-                    Search for Courses
-                    </Button>
-                </Link>
-            </div>
+        <div className="flex basis-full flex-col justify-center px-4 py-16 sm:px-16 md:basis-1/2">
+          <h1 className="text-5xl font-primary font-bold tracking-tighter sm:text-6xl">
+            Unlock Your Potential
+          </h1>
+          <p className="mt-6 max-w-lg text-lg text-muted-foreground md:text-xl">
+            Explore our vast library of on-demand courses and connect with industry
+            experts for exclusive <span className='italic '>1-on-1</span> mentorship. Your path to mastery starts here.
+          </p>
+
+          {/* --- CTA --- */}
+          <div className="mt-10 flex w-fit gap-4">
+            <Link href={`/search`}>
+              <Button size="lg">
+                <BookOpenCheck className="mr-2 h-5 w-5" />
+                Explore Courses
+              </Button>
+            </Link>
+            {/* You could add a secondary button here */}
+            {/* <Button size="lg" variant="outline">Learn More</Button> */}
+          </div>
         </div>
         {/* image section */}
-        <div className='basis-1/2 h-full relative overflow-hidden rounded-r-lg'>
+        <div className='hidden sm:block basis-1/2 h-full relative overflow-hidden rounded-r-lg'>
         {
             ["/hero1.jpg","/hero2.jpg","/hero3.jpg"].map((src,i)=>(
                 <Image
@@ -108,7 +112,7 @@ function Landing() {
         <h2 className="text-3xl font-bold tracking-tight text-primary mb-4">
         Featured Courses
         </h2>
-        <p className="text-muted-foreground mb-8 italic leading-relaxed max-w-2xl">
+        <p className="text-muted-foreground font-secondary mb-8 italic leading-relaxed max-w-2xl">
         Whether you're just starting out or leveling up your expertise, explore curated courses across industries — designed to guide your learning journey and unlock your full potential.
         </p>
 
@@ -133,7 +137,7 @@ function Landing() {
                         // list transition .2s * i
                         transition={{ duration: 0.5 ,delay:i*.2}}
                         viewport={{ amount: 0.3, once: true }}
-                        className='mx-auto py-12 mt-10'
+                        className='mx-auto mt-10'
                         >
                     
 
