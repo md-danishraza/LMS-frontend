@@ -3,6 +3,7 @@ import { DM_Sans} from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Providers from "./providers";
+import {ClerkProvider} from "@clerk/nextjs";
 
 const dmSans = DM_Sans({
   subsets:["latin"],
@@ -24,22 +25,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning 
-    >
-      <body
-        className={`${dmSans.className} `}
-      >
-       <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            
-          >
-            <Providers>
-            {children}
-            </Providers>
-          </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+        <html lang="en" suppressHydrationWarning 
+        >
+        <body
+          className={`${dmSans.className} `}
+        >
+        <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              
+            >
+              <Providers>
+              {children}
+              </Providers>
+            </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

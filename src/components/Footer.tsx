@@ -11,7 +11,7 @@ const Footer = () => {
             key={item}
             href={`/${item.toLowerCase().replace(" ", "-")}`}
             className="text-primary hover:text-accent-foreground mx-2"
-            scroll={false}
+            scroll={true}
           >
             {item}
           </Link>
