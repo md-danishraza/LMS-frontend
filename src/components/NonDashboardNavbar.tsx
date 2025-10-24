@@ -1,17 +1,29 @@
+'use client'
 import Link from 'next/link'
-import React from 'react'
-import { Bell, BookOpen } from 'lucide-react';
+import React, { useState } from 'react'
+import { Bell, BookOpen, LogIn, UserPlus,ChevronDown,ChevronUp  } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import { Button } from './ui/button';
-
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+  } from '@/components/ui/dropdown-menu';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
   } from "@/components/ui/popover"
 import { Logo } from './Logo';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
+
 function NonDashboardNavbar() {
+    const [isOpen, setIsOpen] = useState(false);
+   
+    const {user} = useUser()
+    const userRole = user?.publicMetadata?.userType as "student"|"teacher";
+
   return (
     <nav className='w-full flex justify-center bg-background border-b shadow
     '>
@@ -64,6 +76,65 @@ function NonDashboardNavbar() {
             <ModeToggle/>
 
             {/* sign in btns */}
+            <SignedIn>
+            <UserButton
+              showName={true}
+              userProfileMode="navigation"
+              userProfileUrl={
+                userRole === 'teacher' ? '/teacher/profile' : '/user/profile'
+              }
+              appearance={{
+                elements: {
+                  // Style the avatar trigger
+                  userButtonAvatarBox: 'w-9 h-9',
+                  userButtonBox: 'focus:ring-0 focus:ring-offset-0',
+                  // Style the dropdown menu to match shadcn
+                  userButtonPopoverCard:
+                    'bg-card text-card-foreground border-border shadow-lg',
+                  userButtonPopoverActionButton:
+                    'hover:bg-muted text-muted-foreground',
+                  userButtonPopoverActionButtonIcon:
+                    'text-primary',
+                  userButtonPopoverFooter: 'hidden', // Hides "Powered by Clerk"
+                },
+              }}
+            />
+          </SignedIn>
+
+          <SignedOut>
+            {/* New Dropdown for Sign In / Sign Up */}
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+              <DropdownMenuTrigger asChild >
+                <Button className='cursor-pointer' >Get In 
+                {isOpen ? (
+                    <ChevronUp className="ml-2 h-4 w-4" />
+                ) : (
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/signin"
+                    className="flex w-full items-center gap-2 cursor-pointer"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    <span>Sign In</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/signup"
+                    className="flex w-full items-center gap-2 cursor-pointer"
+                    >
+                    <UserPlus className="h-4 w-4" />
+                    <span>Sign Up</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SignedOut>
         </div>
     </nav>
   )

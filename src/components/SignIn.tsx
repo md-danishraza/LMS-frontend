@@ -1,11 +1,41 @@
 'use client';
 
-import { SignIn } from '@clerk/nextjs';
+import { SignIn,useUser } from '@clerk/nextjs';
 import { useTheme } from 'next-themes';
 import { dark } from '@clerk/themes';
+import { useSearchParams } from 'next/navigation';
 
 export default function SignInComp() {
   const { resolvedTheme } = useTheme();
+
+  const {user} = useUser()
+  const searchParams = useSearchParams()
+  // check whether current page is for checkout or not
+  // only available for checkout page
+  const isCheckoutPage = searchParams.get("showSignUp") !== null;
+  const courseId = searchParams.get("id")
+
+  // if not checkout page then replace signin with signup else go to seperate auth page
+  const signUpUrl = isCheckoutPage ? `/checkout?step=1&id=${courseId}&showSignUp=true` : "/signup"
+  // console.log(signUpUrl)
+
+  // redirects after signin
+  const getRedirectUrl = ()=>{
+    // if done from checkout page than next step
+    if(isCheckoutPage){
+      return `/checkout?step=2&id=${courseId}`
+    }
+
+    const userType = user?.publicMetadata?.userType as string;
+    // if user|student
+    if(userType == "student"){
+      return `/user/courses`
+    }
+    if(userType == "teacher"){
+      return `/teacher/courses`
+    }
+    
+  }
 
   return (
     <SignIn
@@ -35,6 +65,11 @@ export default function SignInComp() {
           logoBox: 'hidden',
         },
       }}
+
+      signUpUrl={signUpUrl}
+      forceRedirectUrl={getRedirectUrl()}
+      routing='hash'
+      afterSignOutUrl="/"
     />
   );
 }
