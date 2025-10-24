@@ -1,46 +1,36 @@
 'use client';
 
-import { SignUp,useUser } from '@clerk/nextjs';
-import { useSearchParams } from 'next/navigation';
+import { SignUp, useUser } from '@clerk/nextjs'; // useUser is no longer needed here for redirects
 import { useTheme } from 'next-themes';
 import { dark } from '@clerk/themes';
+import { useSearchParams } from 'next/navigation';
 
 export default function SignUpComp() {
   const { resolvedTheme } = useTheme();
+  const searchParams = useSearchParams();
 
-  const {user} = useUser()
-  const searchParams = useSearchParams()
-  // check whether current page is for checkout or not
-  // only available for checkout page
-  const isCheckoutPage = searchParams.get("showSignUp") !== null;
-  const courseId = searchParams.get("id")
+  const isCheckoutPage = searchParams.get('showSignUp') !== null;
+  const courseId = searchParams.get('id');
 
-  // if not checkout page then replace signin with signup else go to seperate auth page
-  const signInUrl = isCheckoutPage ? `/checkout?step=1&id=${courseId}&showSignUp=false` : "/signin"
-  // console.log(signUpUrl)
+  const signInUrl = isCheckoutPage
+    ? `/checkout?step=1&id=${courseId}&showSignUp=false`
+    : '/signin';
 
-  // redirects after signup 
-  const getRedirectUrl = ()=>{
-    // if done from checkout page than next step
-    if(isCheckoutPage){
-      return `/checkout?step=2&id=${courseId}`
-    }
-
-    const userType = user?.publicMetadata?.userType as string;
-    // if user|student
-    if(userType == "student"){
-      return `/user/courses`
-    }
-    if(userType == "teacher"){
-      return `/teacher/courses`
+  // REDIRECT LOGIC FOR SIGN UP
+  const getRedirectUrl = () => {
+    // If sign up is done from checkout page, go to next step
+    if (isCheckoutPage) {
+      return `/checkout?step=2&id=${courseId}`;
     }
     
-  }
+    // For ALL other sign-ups, send to onboarding
+    return '/onboarding';
+  };
 
   return (
     <SignUp
       appearance={{
-        // Use Clerk's dark theme if the resolvedNextTheme is dark
+        // ... your theme appearance ...
         baseTheme: resolvedTheme === 'dark' ? dark : undefined,
         variables: {
           colorPrimary: 'hsl(var(--primary))',
@@ -59,10 +49,10 @@ export default function SignUpComp() {
           logoBox: 'hidden',
         },
       }}
-
       signInUrl={signInUrl}
-      forceRedirectUrl={getRedirectUrl()}
-      routing='hash'
+      // Use afterSignUpUrl, not forceRedirectUrl
+      fallbackRedirectUrl={getRedirectUrl()}
+      routing="hash"
       afterSignOutUrl="/"
     />
   );

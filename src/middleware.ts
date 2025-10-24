@@ -3,25 +3,40 @@ import { NextResponse } from "next/server";
 
 const isStudentRoute = createRouteMatcher(["/user/(.*)"]);
 const isTeacherRoute = createRouteMatcher(["/teacher/(.*)"]);
+const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { sessionClaims } = await auth();
+  const { sessionClaims, userId } = await auth();
 
-  // teacher or student default set to student
-  const userRole =
-    (sessionClaims?.metadata as { userType: "student" | "teacher" })
-      ?.userType || "student";
+  const userRole = sessionClaims?.userType as "student" | "teacher" | undefined;
 
-  if (isStudentRoute(req)) {
-    // user is teacher
-    if (userRole == "teacher") {
+  console.log("User ID:", userId);
+  console.log("User Role:", userRole);
+
+  // Redirect users without a role to onboarding
+  if (userId && !userRole && !isOnboardingRoute(req)) {
+    const url = new URL("/onboarding", req.url);
+    return NextResponse.redirect(url);
+  }
+
+  // Handle users with roles
+  if (userId && userRole) {
+    // Redirect away from onboarding if they already have a role
+    if (isOnboardingRoute(req)) {
+      const url = new URL(
+        userRole === "teacher" ? "/teacher/courses" : "/user/courses",
+        req.url
+      );
+      return NextResponse.redirect(url);
+    }
+
+    // Role-based route protection
+    if (isStudentRoute(req) && userRole === "teacher") {
       const url = new URL("/teacher/courses", req.url);
       return NextResponse.redirect(url);
     }
-  }
-  if (isTeacherRoute(req)) {
-    // user is student
-    if (userRole == "student") {
+
+    if (isTeacherRoute(req) && userRole === "student") {
       const url = new URL("/user/courses", req.url);
       return NextResponse.redirect(url);
     }
@@ -30,9 +45,7 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
     "/(api|trpc)(.*)",
   ],
 };
