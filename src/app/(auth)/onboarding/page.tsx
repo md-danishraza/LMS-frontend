@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUser,useSession } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -17,22 +17,28 @@ import {
 } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
-import { Logo } from '@/components/Logo'; // Adjust path as needed
-// Add .js extension if your tsconfig (nodenext) requires it
+
 import { updateUserRole } from './_actions/onboading-action'; 
+
 
 export default function OnboardingPage() {
   const { user } = useUser();
   const { session } = useSession(); 
   const router = useRouter();
   
-  // --- FIX 1: Initialize state with an empty string ---
+  useEffect(()=>{
+    if(!user){
+      return router.push("/")
+    }
+  },[])
+  
+ 
   const [userType, setUserType] = useState<'student' | 'teacher' | ''>('');
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // --- FIX 2: Updated submit logic ---
+  
   const handleRoleSubmit = async () => {
     if (!user || !userType) return;
 
@@ -49,7 +55,7 @@ export default function OnboardingPage() {
       // 2. Refresh the user session
       await session?.reload();
 
-      // 3. Redirect with the 'onboarding=complete' flag
+      // 3. Redirect
       if (userType === 'teacher') {
         router.push('/teacher/courses');
       } else {
@@ -62,17 +68,16 @@ export default function OnboardingPage() {
       // ONLY set loading to false if an error occurred.
       console.error('Error updating user metadata:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-      setIsLoading(false); // <--- This is now in the catch block
+      setIsLoading(false); 
     } 
-    // We remove the 'finally' block entirely.
+    
   };
-  // --- END OF FIX ---
+  
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-muted/20 p-8">
+    <main className="flex flex-col items-center justify-center bg-muted/20 p-2">
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
-          <Logo widthClass="w-[100px]" heightClass="h-[35px]" />
           <CardTitle className="pt-4 text-2xl">
             Welcome to ProLearn!
           </CardTitle>

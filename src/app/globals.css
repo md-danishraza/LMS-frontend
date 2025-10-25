@@ -4,14 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
-
 /* custom fonts */
 @theme {
-  
+
   --font-sans: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --font-serif: "Playfair", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  
+
   /* Create custom utility names */
   --font-primary: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   --font-secondary: "Playfair", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
@@ -59,7 +57,7 @@
 }
 
 :root {
-    
+
   --radius: 0.65rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -92,7 +90,6 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.606 0.25 292.717);
-
 
 }
 
@@ -138,6 +135,5 @@
     @apply bg-background text-foreground;
   }
 
-  
 }
 

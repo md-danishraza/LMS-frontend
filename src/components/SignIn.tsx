@@ -24,7 +24,7 @@ export default function SignInComp() {
     }
 
     // For ALL other sign-ins, just go to the homepage.
-    // Your MIDDLEWARE will catch this and redirect to /onboarding
+    //  MIDDLEWARE will catch this and redirect to /onboarding
     // or /user/courses or /teacher/courses as needed.
     return '/';
   };

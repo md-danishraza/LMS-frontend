@@ -9,9 +9,9 @@ export default clerkMiddleware(async (auth, req) => {
   const { sessionClaims, userId } = await auth();
 
   const userRole = sessionClaims?.userType as "student" | "teacher" | undefined;
-
-  console.log("User ID:", userId);
-  console.log("User Role:", userRole);
+  // console.log(sessionClaims);
+  // console.log("User ID:", userId);
+  // console.log("User Role:", userRole);
 
   // Redirect users without a role to onboarding
   if (userId && !userRole && !isOnboardingRoute(req)) {
