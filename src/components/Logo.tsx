@@ -9,11 +9,13 @@ import Link from 'next/link';
 interface LogoProps {
     widthClass?: string;
     heightClass?: string;
+    className?:string;
   }
 
 export const Logo = ({ 
     widthClass = 'w-[90px] md:w-[120px] ', 
-    heightClass = 'h-[30px] md:h-[40px]' 
+    heightClass = 'h-[30px] md:h-[40px]' ,
+    className
   }: LogoProps) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -36,7 +38,7 @@ export const Logo = ({
     return (
         <Link
         href="/"
-        className={`relative block ${widthClass} ${heightClass} overflow-hidden `}
+        className={`relative block ${widthClass} ${heightClass} overflow-hidden ${className}`}
       >
         <Image
           src={logoSrc}
