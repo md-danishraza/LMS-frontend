@@ -1,4 +1,5 @@
 // state/api.tsx
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BaseQueryApi,FetchArgs } from "@reduxjs/toolkit/query/react";
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -64,7 +65,7 @@ const customBaseQuery = async (
 export const api = createApi({
   reducerPath: "api",
   baseQuery:customBaseQuery,
-  tagTypes:["Courses"],
+  tagTypes:["Courses","Users"],
   endpoints: (builder) => ({
     // query<returnType,inputType>
     getCourses:builder.query<Course[],{category?:string}>(
@@ -80,7 +81,17 @@ export const api = createApi({
       query:(id)=> `courses/${id}`,
       // invalidate courses if theres change in specific course
       providesTags:(result,error,id)=>[{type:"Courses",id}]
-    })
+    }),
+
+    // users setting
+    updateUser: builder.mutation<User, Partial<User> & { userId: string }>({
+      query: ({ userId, ...updatedUser }) => ({
+        url: `users/clerk/${userId}`, 
+        method: 'PUT',
+        body: updatedUser,
+      }),
+      invalidatesTags: ['Users'],
+    }),    
   }),
 });
 

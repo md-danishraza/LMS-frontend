@@ -1,4 +1,40 @@
 declare global {
+  interface PaymentMethod {
+    methodId: string;
+    type: string;
+    lastFour: string;
+    expiry: string;
+  }
+
+  interface UserSettings {
+    theme?: "light" | "dark";
+    emailAlerts?: boolean;
+    smsAlerts?: boolean;
+    courseNotifications?: boolean;
+    notificationFrequency?: "immediate" | "daily" | "weekly";
+  }
+
+  interface User {
+    userId: string;
+    firstName?: string;
+    lastName?: string;
+    username?: string;
+    email: string;
+    publicMetadata: {
+      userType: "teacher" | "student";
+    };
+    privateMetadata: {
+      settings?: UserSettings;
+      paymentMethods?: Array<PaymentMethod>;
+      defaultPaymentMethodId?: string;
+      // stripeCustomerId?: string;
+    };
+    unsafeMetadata: {
+      bio?: string;
+      urls?: string[];
+    };
+  }
+
   interface Course {
     courseId: string;
     teacherId: string;
