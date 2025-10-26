@@ -4,6 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BaseQueryApi,FetchArgs } from "@reduxjs/toolkit/query/react";
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 import {toast} from "sonner";
+import { User } from "@clerk/nextjs/server";
 
 const customBaseQuery = async (
   args: string | FetchArgs,
@@ -84,9 +85,10 @@ export const api = createApi({
     }),
 
     // users setting
-    updateUser: builder.mutation<User, Partial<User> & { userId: string }>({
+    // no response , partial of user publicemtadata{}
+    updateUser: builder.mutation<string, Partial<User> & { userId: string }>({
       query: ({ userId, ...updatedUser }) => ({
-        url: `users/clerk/${userId}`, 
+        url: `user/clerk/${userId}`, 
         method: 'PUT',
         body: updatedUser,
       }),
@@ -95,4 +97,4 @@ export const api = createApi({
   }),
 });
 
-export const {useGetCoursesQuery,useGetCourseQuery} = api;
+export const {useGetCoursesQuery,useGetCourseQuery,useUpdateUserMutation} = api;
