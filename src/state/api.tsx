@@ -6,6 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 import {toast} from "sonner";
 import { User } from "@clerk/nextjs/server";
 
+
 const customBaseQuery = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
@@ -13,13 +14,14 @@ const customBaseQuery = async (
 ) => {
   const baseQuery = fetchBaseQuery({
     baseUrl: baseUrl,
-    // prepareHeaders: async (headers) => {
-    //   const token = await window.Clerk?.session?.getToken();
-    //   if (token) {
-    //     headers.set("Authorization", `Bearer ${token}`);
-    //   }
-    //   return headers;
-    // },
+    // sending clerk auth token in each request
+    prepareHeaders: async (headers) => {
+      const token = await window.Clerk?.session?.getToken();
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   });
 
   try {
@@ -35,7 +37,8 @@ const customBaseQuery = async (
       toast.error(`Error: ${errorMessage}`);
     }
 
-    // mutation toast
+    // mutation toast / update requst
+    // check if not get request than only 
     const isMutationRequest =
       (args as FetchArgs).method && (args as FetchArgs).method !== "GET";
     if (isMutationRequest) {
@@ -86,7 +89,7 @@ export const api = createApi({
 
     // users setting
     // no response , partial of user publicemtadata{}
-    updateUser: builder.mutation<string, Partial<User> & { userId: string }>({
+    updateUser: builder.mutation<User, Partial<User> & { userId: string }>({
       query: ({ userId, ...updatedUser }) => ({
         url: `user/clerk/${userId}`, 
         method: 'PUT',

@@ -6,6 +6,10 @@ declare global {
     expiry: string;
   }
 
+  interface Window {
+    Clerk?: any;
+  }
+
   interface UserSettings {
     theme?: "light" | "dark";
     emailAlerts?: boolean;
