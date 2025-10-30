@@ -12,6 +12,8 @@ export default function SignUpComp() {
   const isCheckoutPage = searchParams.get('showSignUp') !== null;
   const courseId = searchParams.get('id');
 
+  // if checkout page then with false 
+  // else to separate page 
   const signInUrl = isCheckoutPage
     ? `/checkout?step=1&id=${courseId}&showSignUp=false`
     : '/signin';

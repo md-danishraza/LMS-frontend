@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import {motion} from "framer-motion";
 import CourseCardSearch from '@/components/CourseCardSearch';
 import SelectedCourse from './SelectedCourse';
+import { useUser } from '@clerk/nextjs';
 function SearchPage() {
     const searchParams = useSearchParams()
     const id = searchParams.get("id");
@@ -36,9 +37,15 @@ function SearchPage() {
         router.push(`/search?id=${course.courseId}`,{scroll:false});
     }
 
+    const {isSignedIn} = useUser()
+
     // handling enroll course click
     const handleEnroll= (courseId:string)=>{
-        router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`)
+        if(isSignedIn){
+            router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`)
+        }else{
+            router.push(`/checkout?step=1&id=${courseId}&showSignUp=true`)
+        }
     }
 
   if (isLoading) return <Loader/>
