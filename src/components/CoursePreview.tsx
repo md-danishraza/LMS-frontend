@@ -36,7 +36,7 @@ const CoursePreview = ({ course }: {course:Course}) => {
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Course Price:</span>
                 <span className="font-semibold">
-                  ${course.price?.toFixed(2)}
+                  ₹{course.price?.toFixed(2)}
                 </span>
               </div>
               <Separator />

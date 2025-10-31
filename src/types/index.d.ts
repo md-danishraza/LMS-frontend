@@ -87,6 +87,28 @@ declare global {
     sectionDescription?: string;
     chapters: Chapter[];
   }
+
+  interface Window {
+    cashfree: any;
+  }
+
+  // cashfree js {load}
+  interface LoadOptions {
+    mode: "sandbox" | "production";
+  }
+
+  interface Cashfree {
+    checkout(options: any): Promise<any>;
+    create(component: string, options?: any): any;
+  }
+
+  function load(options: LoadOptions): Promise<Cashfree | null>;
+
+  type CashfreeOrderData = {
+    payment_session_id: string;
+    order_id: string;
+    [key: string]: any; // to allow extra properties
+  };
 }
 
 export {};
