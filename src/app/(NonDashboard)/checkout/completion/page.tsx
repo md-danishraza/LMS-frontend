@@ -25,6 +25,7 @@ function CompletionPage() {
       skip: !orderId || !user?.id || status !== 'PENDING' || pollingCount > 40, // Stop after 2 minutes
     }
   );
+  console.log(data?.status)
 
   useEffect(() => {
     if (data?.status) {

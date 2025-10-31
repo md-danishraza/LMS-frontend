@@ -64,7 +64,7 @@ function PaymentPage() {
     try {
       // --- FIX 1: Destructure 'order', not 'data' ---
       // Your backend returns { order: ... }, so we get 'order'
-      const { data:order } = await createOrder({
+      const order:any = await createOrder({
         courseId: courseId,
         userId: user.id,
       }).unwrap();

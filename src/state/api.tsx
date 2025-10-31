@@ -48,8 +48,9 @@ const customBaseQuery = async (
 
     // returning data.data
     if (result.data) {
-      // console.log(result)
+
       result.data = result?.data?.data;
+
     } else if (
       // no content return
       result.error?.status === 204 ||
@@ -57,7 +58,7 @@ const customBaseQuery = async (
     ) {
       return { data: null };
     }
-
+    // console.log(result)
     return result;
   } catch (error: unknown) {
     const errorMessage =
