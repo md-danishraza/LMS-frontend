@@ -109,6 +109,16 @@ declare global {
     order_id: string;
     [key: string]: any; // to allow extra properties
   };
+
+  interface Transaction {
+    userId: string;
+    transactionId: string;
+    dateTime: string;
+    courseId: string;
+    paymentProvider: "cashfree";
+    amount: number;
+    status: "SUCCESS" | "PENDING" | "FAILED";
+  }
 }
 
 export {};

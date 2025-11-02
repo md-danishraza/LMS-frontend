@@ -25,7 +25,15 @@ export const paymentApi = api.injectEndpoints({
       query: ({ userId, orderId }) =>
         `/api/payments/order-status/${userId}/${orderId}`,
     }),
+
+    listTrasactions: builder.query<Transaction[], { userId: string }>({
+      query: ({ userId }) => `/api/payments/transactions/${userId}`,
+    }),
   }),
 });
 
-export const { useCreateOrderMutation, useGetOrderStatusQuery } = paymentApi;
+export const {
+  useCreateOrderMutation,
+  useGetOrderStatusQuery,
+  useListTrasactionsQuery,
+} = paymentApi;
