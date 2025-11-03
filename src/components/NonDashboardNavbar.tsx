@@ -53,7 +53,7 @@ function NonDashboardNavbar() {
                 <PopoverTrigger asChild>
                     <div className="relative w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center cursor-pointer">
                     <span className="absolute top-0 right-0 bg-blue-500 h-1.5 sm:h-2 w-1.5 sm:w-2 rounded-full"></span>
-                    <Button variant="outline" size="icon" className="w-full h-full p-0">
+                    <Button variant="outline" size="icon" className="w-full h-full p-0 cursor-pointer">
                         <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
                         <span className="sr-only">Notifications</span>
                     </Button>
@@ -73,6 +73,7 @@ function NonDashboardNavbar() {
                     </div>
                 </PopoverContent>
             </Popover>
+            {/* theme toggle */}
             <ModeToggle/>
 
             {/* sign in btns */}

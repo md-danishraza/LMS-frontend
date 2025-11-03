@@ -6,7 +6,7 @@ const Footer = () => {
     <div className="text-gray-500 bg-gray-100 dark:bg-gray-900 bottom-0 w-full py-8 mt-10 text-center text-sm">
       <p>&copy; 2025 MD DANISH RAZA. All Rights Reserved.</p>
       <div className="mt-2">
-        {["About", "Privacy Policy", "Licensing", "Contact"].map((item) => (
+        {["About", "Privacy Policy", "Licensing", "Contact","Faq"].map((item) => (
           <Link
             key={item}
             href={`/${item.toLowerCase().replace(" ", "-")}`}

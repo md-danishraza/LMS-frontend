@@ -9,14 +9,14 @@ function page() {
       {/* Container with proper responsive constraints */}
       <div className="flex justify-center py-8 px-4 w-full">
         {/* Wrapper to constrain UserProfile width and make it responsive */}
-        <div className="w-full max-w-5xl">
+        <div className="w-full overflow-scroll">
           <UserProfile
             path='/teacher/profile'
             routing='path'
             appearance={{
               elements: {
                 // Root container - constrain width and make responsive
-                rootBox: 'w-full max-w-full', // Prevents overflow on mobile
+                rootBox: 'w-full max-w-full mr-8', // Prevents overflow on mobile
                 
                 // Card container - responsive width
                 card: 'w-full bg-card text-card-foreground border border-border shadow-sm rounded-lg overflow-hidden',
