@@ -8,7 +8,7 @@ import { useGetCoursesQuery } from '@/state/api';
 import { useCreateCourseMutation, useDeleteCourseMutation } from '@/state/apis/courseApi';
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 export default function TeacherCoursesPage() {
@@ -48,9 +48,7 @@ export default function TeacherCoursesPage() {
 
   // handle actions
   const handleEdit = (course: Course) => {
-    console.log(course)
-    console.log("edited")
-    // router.push(`/teacher/courses/${course.courseId}`,options:{scroll:false});
+    router.push(`/teacher/courses/${course.courseId}`, { scroll: false });
   };
 
   const handleDelete = async (course: Course) => {
@@ -66,11 +64,13 @@ export default function TeacherCoursesPage() {
       teacherId: user.id,
       teacherName: user.fullName || "Unknown Teacher",
     }).unwrap();
+    // created course
+    // 9c6a4a91-792c-42a9-900e-b32339852542
     router.push(`/teacher/courses/${result.courseId}`);
   };
 
 
-  if (!isLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -82,7 +82,7 @@ export default function TeacherCoursesPage() {
     );
   }
   return (
-    <div className="teacher-courses">
+    <div className="w-full h-full">
       {/* header */}
       <HeaderProfile
         title="Courses"
@@ -90,7 +90,8 @@ export default function TeacherCoursesPage() {
         rightElement={
           <Button
             onClick={handleCreateCourse}
-            className="teacher-courses__header"
+            variant="outline"
+            className="cursor-pointer "
           >
             Create Course
           </Button>
@@ -101,7 +102,7 @@ export default function TeacherCoursesPage() {
         onSearch={setSearchTerm}
         onCategoryChange={setSelectedCategory}
       />
-      <div className="teacher-courses__grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 mt-6 w-full">
         {filteredCourses.map((course) => (
           <TeacherCourseCard
             key={course.courseId}
@@ -109,6 +110,7 @@ export default function TeacherCoursesPage() {
             onEdit={handleEdit}
             onDelete={handleDelete}
             // owner boolean 
+            // used to edit and delete
             isOwner={course.teacherId === user?.id}
           />
         ))}

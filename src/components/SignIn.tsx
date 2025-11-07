@@ -40,6 +40,7 @@ export default function SignInComp() {
           colorBackground: 'hsl(var(--background))',
           colorInputBackground: 'hsl(var(--input))',
           colorInputText: 'hsl(var(--foreground))',
+          colorTextOnPrimaryBackground: 'hsl(var(--primary-foreground))'
         },
         elements: {
           card: 'bg-card text-card-foreground border-border shadow-lg',

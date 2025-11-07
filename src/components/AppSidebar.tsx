@@ -17,7 +17,7 @@ import Loader from './Loader'
 import {
   BookOpen,
   Briefcase,
-  DollarSign,
+  IndianRupee,
   LogOut,
   PanelLeft,
   Settings,
@@ -50,7 +50,7 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
     ],
     teacher: [
       { icon: BookOpen, label: "Courses", href: "/teacher/courses" },
-      { icon: DollarSign, label: "Billing", href: "/teacher/billing" },
+      { icon: IndianRupee, label: "Billing", href: "/teacher/billing" },
       { icon: User, label: "Profile", href: "/teacher/profile" },
       { icon: Settings, label: "Settings", href: "/teacher/settings" },
     ],

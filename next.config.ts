@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: '"images.pexels.com"', // or any other image host
         pathname: "/**", // use wildcards for subpaths
       },
+      {
+        protocol: "https",
+        hostname: '"placehold.co"', // or any other image host
+        pathname: "/**", // use wildcards for subpaths
+      },
     ],
   },
 };
