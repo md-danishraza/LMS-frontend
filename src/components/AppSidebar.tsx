@@ -174,7 +174,7 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
               className='hover:bg-destructive/10 hover:text-destructive transition-colors' // Destructive action styling
             >
               <LogOut className="h-5 w-5 shrink-0" />
-              <span className="font-medium text-sm ml-3 group-data-[collapsible=icon]:hidden">
+              <span className="font-medium cursor-pointer text-sm ml-3 group-data-[collapsible=icon]:hidden">
                 Sign out
               </span>
             </SidebarMenuButton>
