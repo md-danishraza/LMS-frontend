@@ -41,7 +41,7 @@ function layout({ children }: { children: React.ReactNode }) {
         {/* ChapterSidebar is conditionally rendered.
             It will only appear on course pages.
         */}
-        {isCoursePage && <ChapterSidebar />}
+        {/* {isCoursePage && <ChapterSidebar />} */}
 
         {/* Main content area */}
         <div className="flex flex-1 flex-col overflow-hidden">

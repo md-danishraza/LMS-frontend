@@ -3,7 +3,7 @@
 
 import { configureStore,combineReducers } from '@reduxjs/toolkit';
 import { api } from './api';
-import { Provider } from 'react-redux';
+import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 // global reducers
 import globalReducer from "@/state";
@@ -21,9 +21,13 @@ const store = configureStore({
     getDefaultMiddleware().concat(api.middleware),
 });
 
+// redux type
 export type RootState = ReturnType<typeof store.getState>;
-// create a custom useDispatch hook 
 export type AppDispatch = typeof store.dispatch;
+
+// create a custom useDispatch and useSelector hook 
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
   return <Provider store={store}>{children}</Provider>;
