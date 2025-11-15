@@ -20,6 +20,7 @@ export const courseSchema = z.object({
   coursePrice: z.string(),
   courseStatus: z.boolean(),
   // courseImage
+  courseImage: z.any().optional(),
 });
 
 export type CourseFormData = z.infer<typeof courseSchema>;

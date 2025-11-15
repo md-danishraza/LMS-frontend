@@ -9,22 +9,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { CourseFormData, courseSchema } from '@/lib/schemas';
-import { createCourseFormData, formatPrice } from '@/lib/utils';
-import { openSectionModal, setSections } from '@/state';
+import { createCourseFormData, formatPrice,uploadAllVideos } from '@/lib/utils';
+import {  setSections } from '@/state';
 import { useGetCourseQuery } from '@/state/api';
-import { useUpdateCourseMutation } from '@/state/apis/courseApi';
+import { useGetUploadVideoUrlMutation, useUpdateCourseMutation } from '@/state/apis/courseApi';
 import { useAppDispatch, useAppSelector } from '@/state/redux';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Loader2, Plus } from 'lucide-react';
+import { ArrowLeft, ImageIcon, Loader2, Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import ChapterModal from './ChapterModal';
 import SectionModal from './SectionModal';
 import SectionList from './SectionList';
 import { toast } from 'sonner';
-
+import NextImage from 'next/image'; 
 
 
 function courseEditor() {
@@ -35,10 +35,14 @@ function courseEditor() {
   const {data:course,isLoading,refetch} = useGetCourseQuery(id);
   // update course mutation
   const [updateCourse,{ isLoading: isUpdating }] = useUpdateCourseMutation();
+  // videos updation hook
+  const [getUploadVideoUrl] = useGetUploadVideoUrlMutation();
 
   // storing state in redux for sections 
   const dispatch = useAppDispatch()
   const {sections} = useAppSelector((state)=>state.global.courseEditor);
+  // image preview state
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   // useform+shadcnForm with zod validation
   const form = useForm<CourseFormData>({
@@ -49,6 +53,7 @@ function courseEditor() {
       courseCategory: "",
       coursePrice: "0",
       courseStatus: false,
+      courseImage: undefined
     },
   });
 
@@ -62,6 +67,10 @@ function courseEditor() {
         coursePrice: formatPrice(course.price),
         courseStatus: course.status === "Published",
       });
+      // Set the preview for the existing image
+      if (course.image) {
+        setImagePreview(course.image);
+      }
       // updating the state
       dispatch(setSections(course.sections || []));
     }
@@ -69,26 +78,26 @@ function courseEditor() {
 
   const onSubmit = async (data: CourseFormData) => {
     try {
-      // const updatedSections = await uploadAllVideos(
-      //   sections,
-      //   id,
-      //   getUploadVideoUrl
-      // );
+      // 1. Upload all videos first and get back sections with URLs
+      // We pass the *original* sections from Redux (which have File objects)
+      const updatedSections = await uploadAllVideos(
+        sections,
+        id,
+        getUploadVideoUrl
+      );
 
-      // // formdata with form + sections
-      // const formData = createCourseFormData(data, updatedSections);
+      // 2. Create the FormData with the new video URLs and the form data
+      const formData = createCourseFormData(data, updatedSections);
 
-      // await updateCourse({
-      //   courseId: id,
-      //   formData,
-      // }).unwrap();
+      // 3. Call the update mutation
+      await updateCourse({
+        courseId: id,
+        formData: formData,
+      }).unwrap();
 
-      toast.success("course published successfully!!")
-      
       refetch();
     } catch (error) {
-      console.error("Failed to update course:", error);
-      toast.error("error in publishing course!!")
+      console.error('Failed to update course:', error);
     }
   };
 
@@ -172,6 +181,62 @@ function courseEditor() {
                   <CardTitle>Course Details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                 {/* --- COURSE IMAGE FIELD --- */}
+                 <FormField
+                      control={form.control}
+                      name="courseImage"
+                      render={({ field: { onChange, value, ...rest } }) => (
+                        <FormItem>
+                          <FormLabel>Course Image</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              className="cursor-pointer"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  onChange(file);
+                                  setImagePreview(URL.createObjectURL(file));
+                                }
+                              }}
+                              {...rest}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                          {imagePreview && (
+                            <div className="relative mt-4 w-full aspect-video rounded-md border overflow-hidden">
+                              <NextImage
+                                src={imagePreview}
+                                alt="Course image preview"
+                                fill
+                                className="object-cover"
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="absolute top-2 right-2 h-7 w-7"
+                                onClick={() => {
+                                  onChange(undefined);
+                                  setImagePreview(null);
+                                }}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                          {!imagePreview && (
+                            <div className="mt-4 flex items-center justify-center w-full aspect-video rounded-md border border-dashed">
+                              <div className="text-center text-muted-foreground">
+                                <ImageIcon className="h-10 w-10 mx-auto" />
+                                <p>No image selected</p>
+                              </div>
+                            </div>
+                          )}
+                        </FormItem>
+                      )}
+                    />
                   {/* course title */}
                   <FormField
                     control={form.control}
