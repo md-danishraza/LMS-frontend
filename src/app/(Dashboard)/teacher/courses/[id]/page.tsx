@@ -1,19 +1,30 @@
 'use client'
-import HeaderProfile from '@/components/HeaderProfile';
+
+import Loader from '@/components/Loader';
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { CourseFormData, courseSchema } from '@/lib/schemas';
 import { createCourseFormData, formatPrice } from '@/lib/utils';
-import { setSections } from '@/state';
+import { openSectionModal, setSections } from '@/state';
 import { useGetCourseQuery } from '@/state/api';
 import { useUpdateCourseMutation } from '@/state/apis/courseApi';
 import { useAppDispatch, useAppSelector } from '@/state/redux';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2, Plus } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
+import ChapterModal from './ChapterModal';
+import SectionModal from './SectionModal';
+import SectionList from './SectionList';
+import { toast } from 'sonner';
+
 
 
 function courseEditor() {
@@ -23,7 +34,7 @@ function courseEditor() {
   // fetching current course
   const {data:course,isLoading,refetch} = useGetCourseQuery(id);
   // update course mutation
-  const [updateCourse] = useUpdateCourseMutation();
+  const [updateCourse,{ isLoading: isUpdating }] = useUpdateCourseMutation();
 
   // storing state in redux for sections 
   const dispatch = useAppDispatch()
@@ -54,7 +65,7 @@ function courseEditor() {
       // updating the state
       dispatch(setSections(course.sections || []));
     }
-  }, [course, form]); 
+  }, [course, form,dispatch]); 
 
   const onSubmit = async (data: CourseFormData) => {
     try {
@@ -72,11 +83,26 @@ function courseEditor() {
       //   formData,
       // }).unwrap();
 
+      toast.success("course published successfully!!")
+      
       refetch();
     } catch (error) {
       console.error("Failed to update course:", error);
+      toast.error("error in publishing course!!")
     }
   };
+
+  // sample select option
+  const categories = [
+    'Development',
+    'Design',
+    'Business',
+    'Marketing',
+    'Music',
+    'IT & Software',
+  ];
+
+  if(isLoading) return <Loader/>
   
 
   return (
@@ -93,72 +119,179 @@ function courseEditor() {
       </div>
 
       {/* shadcn form */}
+      {/* shadcn form */}
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 max-w-2xl"
-        >
-          {/* header with right element of save draft/published btn */}
-          <HeaderProfile 
-            title="Course Setup"
-            subtitle="Complete all fields and save your course"
-            
-            // make this seperate component
-            // will submit the form
-            rightElement= {(
-              <div className="flex items-center space-x-4">
-                {/* <CustomFormField
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          
+          {/* --- Form Header / Right Element --- */}
+          <Card>
+            <CardHeader className="flex flex-wrap gap-2 flex-row items-center justify-between space-y-0">
+              <CardTitle>Course Status & Actions</CardTitle>
+              <div className="flex flex-wrap items-center space-x-4 gap-2">
+                <FormField
+                  control={form.control}
                   name="courseStatus"
-                  // published or draft
-                  label={form.watch("courseStatus") ? "Published" : "Draft"}
-                  type="switch"
-                  className="flex items-center space-x-2"
-                  labelClassName={`text-sm font-medium ${
-                    form.watch("courseStatus")
-                      ? "text-green-500"
-                      : "text-yellow-500"
-                  }`}
-                  inputClassName="data-[state=checked]:bg-green-500"
-                /> */}
-                <Button
-                  type="submit"
-                  className="bg-primary-700 hover:bg-primary-600"
-                >
-                  {form.watch("courseStatus")
-                    ? "Update Published Course"
-                    : "Save Draft"}
+                  render={({ field }) => (
+                    <FormItem className="flex items-center space-x-2 ">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className="data-[state=checked]:bg-green-500 cursor-pointer"
+                        />
+                      </FormControl>
+                      <FormLabel
+                        className={`text-sm font-medium ${
+                          field.value ? 'text-green-500' : 'text-yellow-500'
+                        }`}
+                      >
+                        {field.value ? 'Published' : 'Draft'}
+                      </FormLabel>
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={isUpdating} className='cursor-pointer'>
+                  {isUpdating && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {form.watch('courseStatus')
+                    ? 'Update Published Course'
+                    : 'Save Draft'}
                 </Button>
               </div>
-            )}
-          />
+            </CardHeader>
+          </Card>
+
+          {/* two column layout */}
+          <div className="grid md:grid-cols-2 gap-8">
+            
+            {/* --- Left Container for Form --- */}
+            <div className="basis-1/2 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Course Details</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* course title */}
+                  <FormField
+                    control={form.control}
+                    name="courseTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="e.g. 'The Complete Next.js Course'"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* course description */}
+                  <FormField
+                    control={form.control}
+                    name="courseDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="A short description of your course..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* course category - select option */}
+                  <FormField
+                    control={form.control}
+                    name="courseCategory"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Category</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a category" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {categories.map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* course price */}
+                  <FormField
+                    control={form.control}
+                    name="coursePrice"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Price</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <span className="absolute inset-y-0 left-3 flex items-center text-muted-foreground">
+                              ₹
+                            </span>
+                            <Input
+                              type="number"
+                              min="0"
+                              placeholder="0"
+                              className="pl-7"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+            {/* --- Right Container for Sections --- */}
+            <div className="basis-1/2">
+                <SectionList />
+            </div>
+            
+            
+            
+          </div>
         </form>
-        
       </Form>
 
-      {/* two column layout */}
-      <div className="flex justify-between md:flex-row flex-col gap-10 mt-5 font-dm-sans">
-          {/* left container for form */}
-          <div className="basis-1/2">
-            <div className="space-y-4">
-              {/* inputs */}
-              {/* course title */}
-              {/* course description */}
-              {/* course category - select option */}
-              {/* course price */}
-              
-            </div>
-          </div>
-          {/* right container for sections */}
-          <div className="basis-1/2">
-            <div className='flex justify-between items-center mb-2'>
-
-            </div>
-          </div>
-      </div>
-
+      {/* modals */}
+      <ChapterModal/>
+      <SectionModal/>
     </div>
   )
 
 }
 
 export default courseEditor
+
+
+
+
+
+
+
+
+

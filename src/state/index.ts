@@ -1,4 +1,3 @@
-import courseEditor from "@/app/(Dashboard)/teacher/courses/[id]/page";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // initial state for courseEditor
