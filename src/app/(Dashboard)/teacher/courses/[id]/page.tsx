@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { CourseFormData, courseSchema } from '@/lib/schemas';
-import { createCourseFormData, formatPrice,uploadAllVideos } from '@/lib/utils';
+import { createCourseFormData,uploadAllVideos } from '@/lib/utils';
 import {  setSections } from '@/state';
 import { useGetCourseQuery } from '@/state/api';
 import { useGetUploadVideoUrlMutation, useUpdateCourseMutation } from '@/state/apis/courseApi';
@@ -64,7 +64,7 @@ function courseEditor() {
         courseTitle: course.title,
         courseDescription: course.description,
         courseCategory: course.category,
-        coursePrice: formatPrice(course.price),
+        coursePrice:course.price?.toString() ?? '',
         courseStatus: course.status === "Published",
       });
       // Set the preview for the existing image

@@ -7,11 +7,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatPrice(cents: number | undefined): string {
+export function formatPrice(rupees: number | undefined): string {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
-  }).format(cents || 0);
+  }).format(rupees || 0);
 }
 
 /**

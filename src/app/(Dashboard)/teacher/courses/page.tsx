@@ -4,10 +4,10 @@ import Loader from '@/components/Loader';
 import TeacherCourseCard from '@/components/TeacherCourseCard';
 import Toolbar from '@/components/Toolbar';
 import { Button } from '@/components/ui/button';
-import { useGetCoursesQuery } from '@/state/api';
+import {  useGetTeacherCoursesQuery } from '@/state/api';
 import { useCreateCourseMutation, useDeleteCourseMutation } from '@/state/apis/courseApi';
 import { useUser } from '@clerk/nextjs';
-import Link from 'next/link';
+
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
@@ -17,10 +17,12 @@ export default function TeacherCoursesPage() {
 
   // get list of all courses
   const {
-    data: courses,
+    data: courses, // This is now *only* the teacher's courses
     isLoading,
     isError,
-  } = useGetCoursesQuery({ category: "all" });
+  } = useGetTeacherCoursesQuery(undefined, {
+    skip: !user, // Skip if user isn't loaded
+  });
 
   // create and delete course mutation
   const [createCourse] = useCreateCourseMutation();

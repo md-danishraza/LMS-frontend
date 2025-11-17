@@ -19,7 +19,7 @@ export const courseApi = api.injectEndpoints({
       { courseId: string; formData: FormData }
     >({
       query: ({ courseId, formData }) => ({
-        url: `/api/courses/${courseId}`,
+        url: `/courses/${courseId}`,
         method: "PUT",
         body: formData,
         // NO 'Content-Type' header here.
@@ -52,7 +52,7 @@ export const courseApi = api.injectEndpoints({
       }
     >({
       query: (body) => ({
-        url: "/api/uploads/video-url", // Your new backend endpoint
+        url: "/uploads/video-url", // Your new backend endpoint
         method: "POST",
         body,
       }),
