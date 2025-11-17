@@ -13,30 +13,30 @@ import { useRouter } from 'next/navigation'
 import { Skeleton } from '@/components/ui/skeleton'
 
 function Landing() {
-    const {currentImage} = useCarousel({totalImages:3});
-    const {data:courses,isLoading,error} = useGetCoursesQuery({});
+  const {currentImage} = useCarousel({totalImages:3});
+  const {data:courses,isLoading,error} = useGetCoursesQuery({});
+  
+  const router = useRouter();
+  const handleCourseClick = (courseId:string)=>{
+      router.push(`/search?id=${courseId}`,{
+          scroll:false
+      })
+  }
+  
+  const tags = [
+    'Development',
+    'Design',
+    'Business',
+    'Marketing',
+    'Music',
+    'IT & Software',
+    'Artificial Intelligence',
+    'Data Science',
+    'Computer Science'
+  ]
     
-    const router = useRouter();
-    const handleCourseClick = (courseId:string)=>{
-        router.push(`/search?id=${courseId}`,{
-            scroll:false
-        })
-    }
-    
-    const tags = [
-        'React',
-        'Node.js',
-        'TypeScript',
-        'UI/UX Design',
-        'GraphQL',
-        'Tailwind CSS',
-        'Next.js',
-        'Redux Toolkit',
-        'API Integration',
-        'Product Architecture'
-      ]
 
-      if (isLoading) return <LoadingSkeleton />;
+  if (isLoading) return <LoadingSkeleton />;
   return (
     <motion.div
         initial={{opacity:0}}
@@ -120,7 +120,15 @@ function Landing() {
         <div className='flex flex-wrap gap-4 mb-8'>
         {
             tags.map((tag,i)=>(
-                <span key={i} className='px-3 py-1 bg-secondary hover:text-primary  rounded-full text-sm'>{tag}</span>
+
+                <span key={i} className='px-3 py-1 bg-secondary hover:text-primary  rounded-full text-sm cursor-pointer'
+                onClick={()=>{
+                  router.push(`/search?category=${tag}`,{
+                    scroll:false
+                  })
+                }}
+                >{tag}</span>
+             
             ))
         }
         </div>

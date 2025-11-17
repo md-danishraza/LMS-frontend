@@ -15,7 +15,7 @@ type prop = {
   onCategoryChange: Dispatch<SetStateAction<string>>;
 };
 
-// can tech categories from API later
+// can fetch categories from API later
 const categories = [
   'Development',
   'Design',
@@ -26,14 +26,13 @@ const categories = [
   'Artificial Intelligence',
   'Data Science',
   'Computer Science'
-
 ];
 
 function Toolbar({ onSearch, onCategoryChange }: prop) {
   return (
-    <div className="flex flex-col md:flex-row gap-4 w-full p-4 bg-card border rounded-lg shadow-sm">
+    <div className="flex  flex-col md:flex-row gap-4 w-full p-4 bg-card border rounded-lg shadow-sm">
       {/* Search Input */}
-      <div className="relative w-full md:flex-1">
+      <div className="relative w-full lg:min-w-[200px] md:flex-1">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           placeholder="Search by title..."

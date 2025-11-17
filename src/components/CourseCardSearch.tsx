@@ -5,7 +5,7 @@ import React from 'react'
 function CourseCardSearch({course,isSelected,onClick}:SearchCourseCardProps) {
   return (
     <div onClick={onClick}
-    className={`bg-secondary group overflow-hidden rounded-lg shadow hover:shadow-primary  transition duration-200 flex flex-col cursor-pointer border-2   
+    className={`bg-secondary group overflow-hidden rounded-lg shadow hover:shadow-primary  transition duration-200 flex flex-col cursor-pointer border-2 self-start  
         ${isSelected ? 'border-primary' : 'border-transparent'}`}
     >
       <div className=' relative pt-[56.25%]'>

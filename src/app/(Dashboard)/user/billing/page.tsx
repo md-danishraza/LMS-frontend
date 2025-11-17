@@ -28,6 +28,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
+import HeaderProfile from '@/components/HeaderProfile';
 
 
 
@@ -74,10 +75,11 @@ function BillingPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-5xl py-8 px-4 md:px-6">
-      <h1 className="text-3xl font-extrabold tracking-tight mb-8">
-        Billing History
-      </h1>
+    <div className="container">
+      <HeaderProfile
+        title="Billing History"
+        subtitle="Track you transactions."
+      />
 
       {/* --- Filter Controls --- */}
       <Card className="mb-8 shadow-sm">

@@ -119,6 +119,18 @@ declare global {
     amount: number;
     status: "SUCCESS" | "PENDING" | "FAILED";
   }
+
+  // user courses
+
+  // user course progress
+  interface UserCourseProgress {
+    userId: string;
+    courseId: string;
+    enrollmentDate: string;
+    overallProgress: number;
+    sections: SectionProgress[];
+    lastAccessedTimestamp: string;
+  }
 }
 
 export {};

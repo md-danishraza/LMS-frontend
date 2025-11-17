@@ -68,7 +68,7 @@ const customBaseQuery = async (
 export const api = createApi({
   reducerPath: "api",
   baseQuery: customBaseQuery,
-  tagTypes: ["Courses", "Users"],
+  tagTypes: ["Courses", "Users", "UserCourseProgress"],
   endpoints: (builder) => ({
     // query<returnType,inputType>
     getCourses: builder.query<Course[], { category?: string }>({

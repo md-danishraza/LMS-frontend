@@ -14,9 +14,10 @@ function layout({ children }: { children: React.ReactNode }) {
     const [courseId,setCourseId] = useState<string|null>(null);
     const {user,isLoaded} = useUser();
 
+    // only for user course page
     // handle useEffect for isCourse page - will show extra sidebar
     // main sidebar will be collapsed
-    const isCoursePage = pathname.includes('/courses/');
+    const isCoursePage = pathname.includes('/user/courses/');
 
 
     if (!isLoaded) {
