@@ -20,7 +20,7 @@ import {
 import Loader from '@/components/Loader'; 
 import { useCourseProgressData } from '@/hooks/useCourseProgressData'; 
 
-const ChapterSidebar = () => {
+const ChapterSidebar = ({ mobile = false }: { mobile?: boolean }) => {
   const router = useRouter();
   const { setOpen } = useSidebar();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);

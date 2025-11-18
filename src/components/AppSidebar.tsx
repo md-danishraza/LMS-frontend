@@ -2,7 +2,7 @@
 
 import { useClerk, useUser } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { 
   Sidebar, 
   SidebarContent, 
@@ -31,10 +31,15 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
   // hide on user course page
   // if (isCoursePage) return null;
 
-  //  // Get the sidebar's current state and toggle function
-  //  const { collapsed, toggleSidebar } = useSidebar();
-  //  // Restore logic: Force collapse on course pages, otherwise use user preference
-  //  const isCollapsed = isCoursePage || collapsed;
+  // Get both state and setters from sidebar context
+  const { open, setOpen, openMobile, setOpenMobile } = useSidebar();
+
+  // Force collapse on course pages
+  useEffect(() => {
+    if (isCoursePage) {
+      setOpen(false); // Collapse the sidebar when on course page
+    }
+  }, [isCoursePage, setOpen]);
 
 
   // Get user data from Clerk authentication
@@ -79,7 +84,7 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
 
   return (
     <Sidebar
-      // collapsed={isCollapsed}
+      
       collapsible='icon' // Enables icon-only collapsed mode
       style={{ height: "100vh" }} // Full viewport height
       className='border-r border-border bg-card shadow-lg' // Shadcn theming: uses theme border and background colors

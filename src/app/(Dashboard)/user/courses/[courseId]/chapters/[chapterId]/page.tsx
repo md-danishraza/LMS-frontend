@@ -11,6 +11,7 @@ import { useCourseProgressData } from '@/hooks/useCourseProgressData';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertCircle, FileText, Video as VideoIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import ChapterSidebarMobileToggle from '@/components/ChapterSidebarMobileToggle';
 
 const Course = () => {
   const {
@@ -72,7 +73,7 @@ const Course = () => {
   return (
     <div className="container mx-auto p-4 pb-20 max-w-7xl">
       {/* --- Breadcrumb & Header --- */}
-      <div className="mb-6">
+      <div className="mb-6 relative">
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
            <span className="hover:text-foreground cursor-pointer">{course.title}</span>
            <span>/</span>
@@ -81,6 +82,7 @@ const Course = () => {
            <span className="text-foreground font-medium">{currentChapter.title}</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{currentChapter.title}</h1>
+        <ChapterSidebarMobileToggle/>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
