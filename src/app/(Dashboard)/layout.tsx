@@ -1,17 +1,17 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import Footer from '@/components/Footer'
 import { usePathname } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import Loader from '@/components/Loader'
-import { cn } from '@/lib/utils'
+
 import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/AppSidebar'
 import ChapterSidebar from '@/components/ChapterSidebar'
 import DashboardNavbar from '@/components/DashboardNavbar'
 function layout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
-    const [courseId,setCourseId] = useState<string|null>(null);
+    
     const {user,isLoaded} = useUser();
 
     // only for user course page
@@ -42,7 +42,7 @@ function layout({ children }: { children: React.ReactNode }) {
         {/* ChapterSidebar is conditionally rendered.
             It will only appear on course pages.
         */}
-        {/* {isCoursePage && <ChapterSidebar />} */}
+        {isCoursePage && <ChapterSidebar />}
 
         {/* Main content area */}
         <div className="flex flex-1 flex-col overflow-hidden">
@@ -63,6 +63,7 @@ function layout({ children }: { children: React.ReactNode }) {
             <Footer />
           </main>
         </div>
+        {/* {isCoursePage && <ChapterSidebar />} */}
       </div>
     </SidebarProvider>
   )

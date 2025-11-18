@@ -28,6 +28,15 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
+  // hide on user course page
+  // if (isCoursePage) return null;
+
+  //  // Get the sidebar's current state and toggle function
+  //  const { collapsed, toggleSidebar } = useSidebar();
+  //  // Restore logic: Force collapse on course pages, otherwise use user preference
+  //  const isCollapsed = isCoursePage || collapsed;
+
+
   // Get user data from Clerk authentication
   const { user, isLoaded } = useUser()
   
@@ -70,6 +79,7 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
 
   return (
     <Sidebar
+      // collapsed={isCollapsed}
       collapsible='icon' // Enables icon-only collapsed mode
       style={{ height: "100vh" }} // Full viewport height
       className='border-r border-border bg-card shadow-lg' // Shadcn theming: uses theme border and background colors
