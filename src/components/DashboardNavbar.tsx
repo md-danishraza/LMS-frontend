@@ -46,7 +46,7 @@ function DashboardNavbar({ isCoursePage }: { isCoursePage: boolean }) {
           />
           
           {/* Search bar is hidden on mobile, visible on desktop */}
-          <div className="hidden sm:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <div className="relative group">
               <Link
                 href={`/search`}

@@ -10,18 +10,12 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
- 
-} from '@/components/ui/sidebar';
-import Loader from '@/components/Loader'; 
-import { useCourseProgressData } from '@/hooks/useCourseProgressData'; 
+import { SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
+import Loader from '@/components/Loader';
+import { useCourseProgressData } from '@/hooks/useCourseProgressData';
 
-const ChapterSidebar = () => {
+const ChapterSidebarContent = () => {
   const router = useRouter();
-  
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
 
   const {
@@ -65,14 +59,11 @@ const ChapterSidebar = () => {
   };
 
   return (
-    <Sidebar
-      collapsible="none"
-      className="hidden md:flex w-80 border-r bg-card h-screen overflow-y-auto"
-    >
+    <>
       <SidebarHeader className="p-5 border-b">
         <h2 className="font-bold text-lg line-clamp-2">{course.title}</h2>
       </SidebarHeader>
-      
+
       <SidebarContent className="p-0 gap-0">
         {course.sections.map((section, index) => (
           <Section
@@ -91,10 +82,11 @@ const ChapterSidebar = () => {
           />
         ))}
       </SidebarContent>
-    </Sidebar>
+    </>
   );
 };
 
+// Section Component (same as before)
 const Section = ({
   section,
   index,
@@ -154,6 +146,7 @@ const Section = ({
   );
 };
 
+// ProgressVisuals Component (same as before)
 const ProgressVisuals = ({
   section,
   sectionProgress,
@@ -182,7 +175,7 @@ const ProgressVisuals = ({
         </div>
         {/* Trophy Icon if section complete */}
         <div className={cn("p-1 rounded-full transition-colors", completedChapters === totalChapters && totalChapters > 0 ? "bg-yellow-100" : "bg-transparent")}>
-           <Trophy className={cn("h-3 w-3", completedChapters === totalChapters && totalChapters > 0 ? "text-yellow-600" : "text-muted-foreground/20")} />
+          <Trophy className={cn("h-3 w-3", completedChapters === totalChapters && totalChapters > 0 ? "text-yellow-600" : "text-muted-foreground/20")} />
         </div>
       </div>
       <p className="text-xs text-muted-foreground font-medium">
@@ -192,6 +185,7 @@ const ProgressVisuals = ({
   );
 };
 
+// ChaptersList Component (same as before)
 const ChaptersList = ({
   section,
   sectionProgress,
@@ -217,6 +211,7 @@ const ChaptersList = ({
   );
 };
 
+// Chapter Component (same as before)
 const Chapter = ({
   chapter,
   index,
@@ -284,4 +279,4 @@ const Chapter = ({
   );
 };
 
-export default ChapterSidebar;
+export default ChapterSidebarContent;
