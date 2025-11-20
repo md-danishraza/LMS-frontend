@@ -53,10 +53,10 @@ export const courseApi = api.injectEndpoints({
         fileType: string;
       }
     >({
-      query: (body) => ({
-        url: "/uploads/video-url", // Your new backend endpoint
+      query: ({ courseId, sectionId, chapterId, fileName, fileType }) => ({
+        url: `courses/${courseId}/sections/${sectionId}/chapters/${chapterId}/get-upload-url`,
         method: "POST",
-        body,
+        body: { fileName, fileType },
       }),
       // We extract the 'data' part of the response
       // transformResponse: (response: { message: string; data: any }) => response.data,

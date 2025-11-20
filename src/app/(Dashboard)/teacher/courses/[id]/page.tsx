@@ -83,18 +83,20 @@ function courseEditor() {
       const updatedSections = await uploadAllVideos(
         sections,
         id,
+        // signed url,video url hook
         getUploadVideoUrl
       );
 
       // 2. Create the FormData with the new video URLs and the form data
       const formData = createCourseFormData(data, updatedSections);
 
-      // 3. Call the update mutation
+      // 3. Call the course update mutation
       await updateCourse({
         courseId: id,
         formData: formData,
       }).unwrap();
 
+      // refetching after update
       refetch();
     } catch (error) {
       console.error('Failed to update course:', error);

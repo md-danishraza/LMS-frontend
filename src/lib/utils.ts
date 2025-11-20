@@ -71,11 +71,13 @@ export const uploadAllVideos = async (
         .find((s) => s.sectionId === section.sectionId)
         ?.chapters.find((c) => c.chapterId === chapter.chapterId);
 
+      // only uploading video file
       if (originalChapter?.video && originalChapter.video instanceof File) {
         // Push the upload task to the promises array
         uploadPromises.push(
           (async () => {
             try {
+              // getting updated chapters with S3/cloudfront video url
               const updatedChapter = await uploadVideo(
                 originalChapter, // Pass the original chapter with the File
                 courseId,

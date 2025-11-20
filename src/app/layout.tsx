@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Providers from "./providers";
 import {ClerkProvider} from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 
 const dmSans = DM_Sans({
   subsets:["latin"],
@@ -38,10 +39,12 @@ export default function RootLayout({
               enableSystem
               
             >
-              <Providers>
-                <Toaster richColors/>
-              {children}
-              </Providers>
+              <Suspense fallback={null}>
+                <Providers>
+                  <Toaster richColors/>
+                  {children}
+                </Providers>
+              </Suspense>
             </ThemeProvider>
         </body>
       </html>
