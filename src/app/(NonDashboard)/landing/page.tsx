@@ -118,19 +118,20 @@ function Landing() {
 
         {/* tags */}
         <div className='flex flex-wrap gap-4 mb-8'>
-        {
-            tags.map((tag,i)=>(
-
-                <span key={i} className='px-3 py-1 bg-secondary hover:text-primary  rounded-full text-sm cursor-pointer'
-                onClick={()=>{
-                  router.push(`/search?category=${tag}`,{
-                    scroll:false
-                  })
-                }}
-                >{tag}</span>
-             
-            ))
-        }
+          {tags.map((tag, i) => (
+            <span
+              key={i}
+              className="px-3 py-1 bg-secondary hover:text-primary rounded-full text-sm cursor-pointer"
+              onClick={() => {
+                // FIX: Use encodeURIComponent to handle spaces and special chars like '&'
+                router.push(`/search?category=${encodeURIComponent(tag)}`, {
+                  scroll: false,
+                });
+              }}
+            >
+              {tag}
+            </span>
+          ))}
         </div>
         {/* courses */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>

@@ -14,12 +14,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import ChapterSidebarMobileToggle from '@/components/ChapterSidebarMobileToggle';
 
 
-// 1. Import dynamic from Next.js
-import dynamic from 'next/dynamic';
-
-// 2. Dynamically import ReactPlayer with SSR disabled
-// This fixes the "video not working" issue in Next.js
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false }) as any;
 
 const Course = () => {
   const {
@@ -35,12 +29,23 @@ const Course = () => {
     setHasMarkedComplete,
   } = useCourseProgressData();
 
-  const playerRef = useRef<any>(null); // keeping as 'any' is safest for the dynamic component ref
-  const handleProgress =(state: { played: number; playedSeconds: number; loaded: number; loadedSeconds: number }) => {
-    const { played } = state;
+  // Use a Ref for the native video element
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Logic to handle progress updates from the native video player
+  const handleTimeUpdate = () => {
+    if (!videoRef.current) return;
+
+    const { currentTime, duration } = videoRef.current;
+    
+    // Avoid division by zero if metadata hasn't loaded
+    if (!duration) return;
+
+    const progressPercentage = currentTime / duration;
+
     // Mark as complete if 80% watched and not already marked
     if (
-      played >= 0.8 &&
+      progressPercentage >= 0.8 &&
       !hasMarkedComplete &&
       currentChapter &&
       currentSection &&
@@ -102,34 +107,20 @@ const Course = () => {
           <Card className="overflow-hidden shadow-md border-none bg-black/95">
              <div className="relative w-full aspect-video">
                 {currentChapter.video ? (
-                   <ReactPlayer
-                    ref={playerRef}
-                    url={currentChapter.video as string}
-                    controls
-                    width="100%"
-                    height="100%"
-                    onProgress={handleProgress}
-                    config={{
-                      file: {
-                        attributes: {
-                          controlsList: 'nodownload',
-                        },
-                      },
-                  } as any}                                 
-                  />
-                  
-                  // native tag (works)
-                  // <video controls width="600" src={currentChapter.video as string}></video>
-                  
-                  // minimal react player
-                  // <ReactPlayer
-                  //   url={currentChapter?.video as string}
-                  //   controls
-                  //   width="100%"
-                  //   height="100%"
-                  //   config={{ file: { forceVideo: true } }}
-                  // />
-
+                  // --- NATIVE HTML5 VIDEO PLAYER ---
+                  <video
+                  ref={videoRef}
+                  src={currentChapter.video as string}
+                  controls
+                  className="w-full h-full object-contain"
+                  // This event fires continually as the video plays
+                  onTimeUpdate={handleTimeUpdate}
+                  // This ensures the video pauses if they switch tabs/apps (optional)
+                  // onBlur={(e) => e.currentTarget.pause()}
+                  controlsList="nodownload" // Simple attribute to hide download button
+                >
+                  Your browser does not support the video tag.
+                </video>
 
                 ) : (
                   <div className="flex h-full flex-col items-center justify-center text-white/50 bg-zinc-900">

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { Bell, BookOpen, LogIn, UserPlus,ChevronDown,ChevronUp  } from 'lucide-react';
+import { Bell, BookOpen, LogIn, UserPlus,ChevronDown,ChevronUp, LayoutDashboard  } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import { Button } from './ui/button';
 import {
@@ -24,6 +24,31 @@ function NonDashboardNavbar() {
     const {user} = useUser()
     const userRole = user?.publicMetadata?.userType as "student"|"teacher";
 
+
+    // --- DYNAMIC LINK LOGIC ---
+    // Default to Search (Guest)
+    let navbarLink = {
+      href: '/search',
+      label: 'Search Courses',
+      icon: BookOpen,
+    };
+
+    if (user) {
+      if (userRole === 'teacher') {
+        navbarLink = {
+          href: '/teacher/courses',
+          label: 'Dashboard',
+          icon: LayoutDashboard,
+        };
+      } else if (userRole === 'student') {
+        navbarLink = {
+          href: '/user/courses',
+          label: 'My Courses',
+          icon: BookOpen,
+        };
+      }
+    }
+  
   return (
     <nav className='w-full px-4 flex justify-center bg-background border-b shadow
     '>
@@ -36,15 +61,24 @@ function NonDashboardNavbar() {
             </Link>  */}
             <Logo/>
 
-            <div className='hidden  sm:flex items-center gap-4'>
-                <div className='relative group '>
-                    <Link href={`/search`} className='pl-10 sm:pl-14 pr-6 sm:pr-10 py-3 sm:py-4 rounded-xl bg-muted hover:text-muted-foreground transition-all duration-300 text-sm sm:text-base'>
-                        <span className='hidden sm:inline'>Search Courses</span>
-                        <span className='sm:hidden'>Search</span>
-                    </Link>
-                    <BookOpen size={18} className="absolute left-3 sm:left-5 top-1/2 transform -translate-y-1/2 text-primary transition-all duration-300"/>
+            {/* --- DYNAMIC BUTTON --- */}
+              <div className="hidden items-center gap-4 md:flex">
+                <div className="relative group">
+                  <Link
+                    href={navbarLink.href}
+                    className="pl-10 sm:pl-14 pr-6 sm:pr-10 py-3 sm:py-4 rounded-xl bg-muted hover:text-muted-foreground transition-all duration-300 text-sm sm:text-base"
+                  >
+                    <span className="hidden sm:inline">{navbarLink.label}</span>
+                    <span className="sm:hidden">
+                      {navbarLink.label === 'Search Courses' ? 'Search' : 'Courses'}
+                    </span>
+                  </Link>
+                  <navbarLink.icon
+                    size={18}
+                    className="absolute left-3 sm:left-5 top-1/2 transform -translate-y-1/2 text-primary transition-all duration-300"
+                  />
                 </div>
-            </div>
+              </div>
             </div>
         </div>
         {/* non dashboard  - right side */}

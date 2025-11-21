@@ -13,17 +13,15 @@ import {
 
   import { PlayCircle } from 'lucide-react';
   
-  // The card now expects the 'overallProgress' field
-  interface EnrolledCourse extends Course {
-    overallProgress: number;
-  }
+  
   
   interface UserCourseCardProps {
-    course: EnrolledCourse;
+    course: Course;
     onGoToCourse: (course: Course) => void;
   }
   
   const UserCourseCard = ({ course, onGoToCourse }: UserCourseCardProps) => {
+    console.log(course)
     return (
       <Card
         className="flex flex-col h-full shadow-sm overflow-hidden transition-all hover:shadow-md cursor-pointer group p-0 gap-0"

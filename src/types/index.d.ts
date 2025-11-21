@@ -54,6 +54,8 @@ declare global {
     enrollments?: Array<{
       userId: string;
     }>;
+    // progress from userCourseProgress
+    overallProgress?: number;
   }
 
   interface SearchCourseCardProps {

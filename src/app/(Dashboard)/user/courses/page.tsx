@@ -13,10 +13,7 @@ import { BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
 
-// Define the type for an enrolled course
-type EnrolledCourse = Course & {
-  overallProgress: number;
-};
+
 
 const StudentCoursesPage = () => {
   const router = useRouter();
@@ -113,7 +110,7 @@ const StudentCoursesPage = () => {
           {filteredCourses.map((course) => (
             <UserCourseCard
               key={course.courseId}
-              course={course as EnrolledCourse} // Cast to EnrolledCourse
+              course={course} // Cast to EnrolledCourse
               onGoToCourse={handleGoToCourse}
             />
           ))}

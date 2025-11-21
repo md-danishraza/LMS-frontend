@@ -10,6 +10,7 @@ import { useUser } from '@clerk/nextjs';
 import Toolbar from '@/components/Toolbar';
 import HeaderProfile from '@/components/HeaderProfile';
 function SearchPage() {
+    const router = useRouter();
     const searchParams = useSearchParams()
     // search inputs from params (clicked from landing page)
     const id = searchParams.get("id");
@@ -17,49 +18,69 @@ function SearchPage() {
 
     const {data:courses,isLoading,isError} = useGetCoursesQuery({});
     const [selectedCourse,setSelectedCourse] = useState<Course|null>(null);
-    const router = useRouter();
 
-    // filtered courses 
-      const [searchTerm, setSearchTerm] = useState("");
-      const [selectedCategory, setSelectedCategory] = useState(category?category:"all");
+    // filter states
+    const [searchTerm, setSearchTerm] = useState("");
+    // Initialize with "all" if no category param exists
+    const [selectedCategory, setSelectedCategory] = useState("all");
+
+
+    // This ensures if the URL changes (e.g. from Landing Page), the filter updates
+    useEffect(() => {
+        if (category) {
+        // decodeURIComponent handles '%20' (space) and '%26' (&) automatically
+        setSelectedCategory(category);
+        } else {
+        setSelectedCategory("all");
+        }
+    }, [category]);
     
       // caching filteredCourses to prevent it from re-execution bw re-render
       const filteredCourses = useMemo(() => {
         if (!courses) return [];
     
         return courses.filter((course) => {
-          // by search term
           const matchesSearch = course.title
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
-            // by category
+          
           const matchesCategory =
             selectedCategory === "all" || course.category === selectedCategory;
+    
           return matchesSearch && matchesCategory;
         });
       }, [courses, searchTerm, selectedCategory]);
 
-    // selecting first course if its not available in search query params
-    useEffect(()=>{
-        if(filteredCourses){
-            if(id){
-                const course = filteredCourses.find((c)=>c.courseId==id)
-                setSelectedCourse(course || filteredCourses[0])
-            }else{
-                setSelectedCourse(filteredCourses[0])
 
+      // 4. Handle Course Selection (from URL or Default)
+        useEffect(() => {
+            if (filteredCourses && filteredCourses.length > 0) {
+            if (id) {
+                const course = filteredCourses.find((c) => c.courseId === id);
+                setSelectedCourse(course || filteredCourses[0]);
+            } else {
+                // If no ID in URL, select the first one from the FILTERED list
+                setSelectedCourse(filteredCourses[0]);
             }
-        }
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-          });
-    },[filteredCourses,id])
+            } else {
+                // Handle empty results
+                setSelectedCourse(null);
+            }
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }, [filteredCourses, id]);
 
-    // update the current selected course state
+
+    // 5. Update URL when a course is clicked
     function handleCourseSelect(course: Course): void {
-        setSelectedCourse(course)
-        router.push(`/search?id=${course.courseId}`,{scroll:false});
+        setSelectedCourse(course);
+        // Keep the category in the URL so refreshing keeps the filter
+        const categoryQuery = selectedCategory !== 'all' ? `&category=${encodeURIComponent(selectedCategory)}` : '';
+        router.push(`/search?id=${course.courseId}${categoryQuery}`, {
+        scroll: false,
+        });
     }
 
     const {isSignedIn} = useUser()
@@ -90,6 +111,7 @@ function SearchPage() {
             <Toolbar
                 onSearch={setSearchTerm}
                 onCategoryChange={setSelectedCategory}
+                selectedCategory={selectedCategory}
             />}/>
             
 

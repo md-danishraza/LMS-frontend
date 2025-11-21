@@ -13,6 +13,7 @@ import { Search } from 'lucide-react';
 type prop = {
   onSearch: Dispatch<SetStateAction<string>>;
   onCategoryChange: Dispatch<SetStateAction<string>>;
+  selectedCategory?: string;
 };
 
 // can fetch categories from API later
@@ -28,7 +29,7 @@ const categories = [
   'Computer Science'
 ];
 
-function Toolbar({ onSearch, onCategoryChange }: prop) {
+function Toolbar({ onSearch, onCategoryChange,selectedCategory }: prop) {
   return (
     <div className="flex  flex-col md:flex-row gap-4 w-full p-4 bg-card border rounded-lg shadow-sm">
       {/* Search Input */}
@@ -43,7 +44,7 @@ function Toolbar({ onSearch, onCategoryChange }: prop) {
 
       {/* Category Select */}
       <div className="w-full md:w-auto md:min-w-[200px]">
-        <Select defaultValue="all" onValueChange={onCategoryChange}>
+        <Select value={selectedCategory || 'all'} onValueChange={onCategoryChange}>
           <SelectTrigger>
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
