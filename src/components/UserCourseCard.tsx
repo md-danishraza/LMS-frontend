@@ -69,7 +69,7 @@ import {
           <div className="space-y-1 pt-2">
             <Progress value={course.overallProgress} className="h-2" />
             <p className="text-xs text-muted-foreground">
-              {course.overallProgress}% Complete
+              {course.overallProgress || 0}% Complete
             </p>
           </div>
         </CardContent>

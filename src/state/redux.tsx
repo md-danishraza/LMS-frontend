@@ -18,7 +18,20 @@ const rootReducer = combineReducers({
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these specific actions that carry File objects
+        ignoredActions: [
+          "global/setSections",
+          "global/addChapter",
+          "global/editChapter",
+        ],
+        // Ignore these specific paths in the state where Files are stored
+        ignoredPaths: [
+          "global.courseEditor.sections", 
+        ],
+      },
+    }).concat(api.middleware),
 });
 
 // redux type

@@ -2,16 +2,24 @@
 
 import { useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import ReactPlayer from 'react-player';
+// import ReactPlayer from 'react-player';
 import Loader from '@/components/Loader';
 import { useCourseProgressData } from '@/hooks/useCourseProgressData';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertCircle, FileText, Video as VideoIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import ChapterSidebarMobileToggle from '@/components/ChapterSidebarMobileToggle';
+
+
+// 1. Import dynamic from Next.js
+import dynamic from 'next/dynamic';
+
+// 2. Dynamically import ReactPlayer with SSR disabled
+// This fixes the "video not working" issue in Next.js
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false }) as any;
 
 const Course = () => {
   const {
@@ -27,9 +35,9 @@ const Course = () => {
     setHasMarkedComplete,
   } = useCourseProgressData();
 
-  const playerRef = useRef<any>(null);
-
-  const handleProgress = ({ played }: { played: number }) => {
+  const playerRef = useRef<any>(null); // keeping as 'any' is safest for the dynamic component ref
+  const handleProgress =(state: { played: number; playedSeconds: number; loaded: number; loadedSeconds: number }) => {
+    const { played } = state;
     // Mark as complete if 80% watched and not already marked
     if (
       played >= 0.8 &&
@@ -48,7 +56,7 @@ const Course = () => {
     }
   };
 
-  // console.log(course)
+  // console.log(currentChapter)
 
   if (isLoading) return <Loader />;
   
@@ -107,8 +115,22 @@ const Course = () => {
                           controlsList: 'nodownload',
                         },
                       },
-                    } as any}                                 
+                  } as any}                                 
                   />
+                  
+                  // native tag (works)
+                  // <video controls width="600" src={currentChapter.video as string}></video>
+                  
+                  // minimal react player
+                  // <ReactPlayer
+                  //   url={currentChapter?.video as string}
+                  //   controls
+                  //   width="100%"
+                  //   height="100%"
+                  //   config={{ file: { forceVideo: true } }}
+                  // />
+
+
                 ) : (
                   <div className="flex h-full flex-col items-center justify-center text-white/50 bg-zinc-900">
                      <VideoIcon className="h-16 w-16 mb-4 opacity-20" />
