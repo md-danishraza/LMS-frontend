@@ -67,7 +67,7 @@ const ChapterSidebar = () => {
   return (
     <Sidebar
       collapsible="none"
-      className="hidden md:flex w-80 border-r bg-card h-screen overflow-y-auto"
+      className="hidden md:flex w-80 border-r bg-card h-full overflow-y-auto"
     >
       <SidebarHeader className="p-5 border-b">
         <h2 className="font-bold text-lg line-clamp-2">{course.title}</h2>

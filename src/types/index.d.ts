@@ -58,12 +58,6 @@ declare global {
     overallProgress?: number;
   }
 
-  interface SearchCourseCardProps {
-    course: Course;
-    isSelected?: Boolean;
-    onClick?: () => void;
-  }
-
   interface Chapter {
     chapterId: string;
     title: string;

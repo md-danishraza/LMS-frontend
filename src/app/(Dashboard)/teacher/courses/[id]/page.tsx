@@ -28,7 +28,7 @@ import NextImage from 'next/image';
 
 
 function courseEditor() {
-    const params = useParams();
+  const params = useParams();
   const id = params.id as string;
   const router = useRouter()
   // fetching current course
@@ -37,6 +37,9 @@ function courseEditor() {
   const [updateCourse,{ isLoading: isUpdating }] = useUpdateCourseMutation();
   // videos updation hook
   const [getUploadVideoUrl] = useGetUploadVideoUrlMutation();
+
+   // State to track video upload progress specifically ---
+   const [isUploading, setIsUploading] = useState(false);
 
   // storing state in redux for sections 
   const dispatch = useAppDispatch()
@@ -77,6 +80,9 @@ function courseEditor() {
   }, [course, form,dispatch]); 
 
   const onSubmit = async (data: CourseFormData) => {
+    // Start local loading state for uploads
+    setIsUploading(true);
+
     try {
       // 1. Upload all videos first and get back sections with URLs
       // We pass the *original* sections from Redux (which have File objects)
@@ -100,6 +106,9 @@ function courseEditor() {
       refetch();
     } catch (error) {
       console.error('Failed to update course:', error);
+    } finally {
+      // Stop local loading state
+      setIsUploading(false);
     }
   };
 
@@ -115,6 +124,8 @@ function courseEditor() {
 
   if(isLoading) return <Loader/>
   
+    // Combined loading state for the button
+    const isSubmitLoading = isUploading || isUpdating;
 
   return (
     <div>
@@ -161,14 +172,18 @@ function courseEditor() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={isUpdating} className='cursor-pointer'>
-                  {isUpdating && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  {form.watch('courseStatus')
-                    ? 'Update Published Course'
-                    : 'Save Draft'}
-                </Button>
+                 <Button 
+                    type="submit" 
+                    disabled={isSubmitLoading} 
+                    className="cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitLoading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    {form.watch('courseStatus')
+                      ? 'Update Published Course'
+                      : 'Save Draft'}
+                  </Button>
               </div>
             </CardHeader>
           </Card>

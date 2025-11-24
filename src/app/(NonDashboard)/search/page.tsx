@@ -7,8 +7,9 @@ import {motion} from "framer-motion";
 import CourseCardSearch from '@/components/CourseCardSearch';
 import SelectedCourse from './SelectedCourse';
 import { useUser } from '@clerk/nextjs';
-import Toolbar from '@/components/Toolbar';
+
 import HeaderProfile from '@/components/HeaderProfile';
+import NonDashToolbar from '@/components/NonDashToolbar';
 function SearchPage() {
     const router = useRouter();
     const searchParams = useSearchParams()
@@ -108,7 +109,7 @@ function SearchPage() {
         <HeaderProfile  
         title='List of available courses' 
         subtitle={`${courses.length} courses available`} rightElement={
-            <Toolbar
+            <NonDashToolbar
                 onSearch={setSearchTerm}
                 onCategoryChange={setSelectedCategory}
                 selectedCategory={selectedCategory}

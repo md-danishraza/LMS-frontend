@@ -2,10 +2,18 @@ import { formatPrice } from '@/lib/utils'
 import Image from 'next/image'
 import React from 'react'
 
-function CourseCardSearch({course,isSelected,onClick}:SearchCourseCardProps) {
+interface SearchCourseCardProps {
+  course: Course;
+  isSelected?: Boolean;
+  isLanding?:Boolean;
+  onClick?: () => void;
+}
+
+function CourseCardSearch({course,isSelected,isLanding=false,onClick}:SearchCourseCardProps) {
   return (
     <div onClick={onClick}
-    className={`bg-secondary group overflow-hidden rounded-lg shadow hover:shadow-primary  transition duration-200 flex flex-col cursor-pointer border-2 self-start  
+    className={` bg-secondary group overflow-hidden rounded-lg shadow hover:shadow-primary  transition duration-200 flex flex-col cursor-pointer border-2  
+        ${isLanding ? 'w-full h-full' : 'self-start '}
         ${isSelected ? 'border-primary' : 'border-transparent'}`}
     >
       <div className=' relative pt-[56.25%]'>
@@ -16,7 +24,7 @@ function CourseCardSearch({course,isSelected,onClick}:SearchCourseCardProps) {
         fill
          // painting area by responsive image
         sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
-        className=' object-cover transition-transform'
+        className=' object-cover  transition-transform'
         priority
         />
       </div>

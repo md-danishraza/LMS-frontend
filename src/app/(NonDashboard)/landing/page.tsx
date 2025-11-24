@@ -12,6 +12,13 @@ import CourseCardSearch from '@/components/CourseCardSearch'
 import { useRouter } from 'next/navigation'
 import { Skeleton } from '@/components/ui/skeleton'
 
+// images
+import landing_1 from "@/assets/landing_1.jpg";
+import landing_2 from "@/assets/landing_2.jpg";
+import landing_3 from "@/assets/landing_3.jpg";
+
+const carousel_img = [landing_1,landing_2,landing_3]
+
 function Landing() {
   const {currentImage} = useCarousel({totalImages:3});
   const {data:courses,isLoading,error} = useGetCoursesQuery({});
@@ -76,16 +83,16 @@ function Landing() {
         {/* image section */}
         <div className='hidden sm:block basis-1/2 h-full relative overflow-hidden rounded-r-lg'>
         {
-            ["/hero1.jpg","/hero2.jpg","/hero3.jpg"].map((src,i)=>(
+            carousel_img.map((src,i)=>(
                 <Image
-                    key={src}
+                    key={i*Math.random()}
                     src={src}
                     alt={`hero bannder index ${i}`}
                     // take parent dimension
                     fill
                     priority={i===currentImage}
                     // painting area by responsive image
-                    sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+                    sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw"
                     // showing only current image
                     className={
                         `
@@ -134,7 +141,7 @@ function Landing() {
           ))}
         </div>
         {/* courses */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full'>
             {
                 courses &&
                 courses.slice(0,4).map((course,i)=>{
@@ -146,11 +153,12 @@ function Landing() {
                         // list transition .2s * i
                         transition={{ duration: 0.5 ,delay:i*.2}}
                         viewport={{ amount: 0.3, once: true }}
-                        className='mx-auto mt-10'
+                        className='mx-auto mt-10 w-full'
                         >
                     
 
-                            <CourseCardSearch course={course} onClick={()=>handleCourseClick(course.courseId)}/>
+                            <CourseCardSearch course={course} onClick={()=>handleCourseClick(course.courseId)} 
+                              isLanding={true}/>
                             
 
                         </motion.div>
