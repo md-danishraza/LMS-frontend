@@ -19,7 +19,7 @@ export default function TeacherCoursesPage() {
   const {
     data: courses, // This is now *only* the teacher's courses
     isLoading,
-    isError,
+    
   } = useGetTeacherCoursesQuery(undefined, {
     skip: !user, // Skip if user isn't loaded
   });

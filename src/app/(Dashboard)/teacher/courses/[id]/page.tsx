@@ -15,7 +15,7 @@ import { useGetCourseQuery } from '@/state/api';
 import { useGetUploadVideoUrlMutation, useUpdateCourseMutation } from '@/state/apis/courseApi';
 import { useAppDispatch, useAppSelector } from '@/state/redux';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, ImageIcon, Loader2, Plus, X } from 'lucide-react';
+import { ArrowLeft, ImageIcon, Loader2, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -23,11 +23,11 @@ import { useForm } from 'react-hook-form';
 import ChapterModal from './ChapterModal';
 import SectionModal from './SectionModal';
 import SectionList from './SectionList';
-import { toast } from 'sonner';
+
 import NextImage from 'next/image'; 
 
 
-function courseEditor() {
+function CourseEditor() {
   const params = useParams();
   const id = params.id as string;
   const router = useRouter()
@@ -367,7 +367,7 @@ function courseEditor() {
 
 }
 
-export default courseEditor
+export default CourseEditor
 
 
 

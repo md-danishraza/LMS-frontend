@@ -1,6 +1,6 @@
 'use client';
 
-import { SignUp, useUser } from '@clerk/nextjs'; // useUser is no longer needed here for redirects
+import { SignUp } from '@clerk/nextjs'; 
 import { useTheme } from 'next-themes';
 import { dark } from '@clerk/themes';
 import { useSearchParams } from 'next/navigation';

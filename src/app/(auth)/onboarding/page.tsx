@@ -30,7 +30,7 @@ export default function OnboardingPage() {
     if(!user){
       return router.push("/")
     }
-  },[])
+  },[user,router])
   
  
   const [userType, setUserType] = useState<'student' | 'teacher' | ''>('');

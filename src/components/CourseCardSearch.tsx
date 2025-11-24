@@ -4,8 +4,8 @@ import React from 'react'
 
 interface SearchCourseCardProps {
   course: Course;
-  isSelected?: Boolean;
-  isLanding?:Boolean;
+  isSelected?: boolean;
+  isLanding?:boolean;
   onClick?: () => void;
 }
 

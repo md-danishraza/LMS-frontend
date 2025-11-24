@@ -32,7 +32,7 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
   // if (isCoursePage) return null;
 
   // Get both state and setters from sidebar context
-  const { open, setOpen, openMobile, setOpenMobile } = useSidebar();
+  const { setOpen } = useSidebar();
 
   // Force collapse on course pages
   useEffect(() => {

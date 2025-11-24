@@ -21,7 +21,7 @@ const carousel_img = [landing_1,landing_2,landing_3]
 
 function Landing() {
   const {currentImage} = useCarousel({totalImages:3});
-  const {data:courses,isLoading,error} = useGetCoursesQuery({});
+  const {data:courses,isLoading} = useGetCoursesQuery({});
   
   const router = useRouter();
   const handleCourseClick = (courseId:string)=>{

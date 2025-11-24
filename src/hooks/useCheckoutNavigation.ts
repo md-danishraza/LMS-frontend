@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 export const useCheckoutNavigation = () => {
   const router = useRouter();

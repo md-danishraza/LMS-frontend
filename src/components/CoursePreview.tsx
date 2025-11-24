@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
-
+import Image from "next/image";
 const CoursePreview = ({ course }: {course:Course}) => {
   return (
     <div className="w-full">
@@ -15,13 +15,15 @@ const CoursePreview = ({ course }: {course:Course}) => {
           <CardContent className="space-y-6">
             {/* Course Details */}
             <div className="flex items-center gap-4">
-              <img
-                src={course.image}
+              {
+                course.image && <Image
+                src={course?.image}
                 alt={course.title}
                 width={160}
                 height={90}
                 className="rounded-md object-cover"
               />
+              }
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{course.title}</h3>
                 <p className="text-sm text-muted-foreground">

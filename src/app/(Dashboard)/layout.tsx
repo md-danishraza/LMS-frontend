@@ -9,7 +9,7 @@ import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/AppSidebar'
 import ChapterSidebar from '@/components/ChapterSidebar'
 import DashboardNavbar from '@/components/DashboardNavbar'
-function layout({ children }: { children: React.ReactNode }) {
+function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
     
     const {user,isLoaded} = useUser();
@@ -69,4 +69,4 @@ function layout({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default layout
+export default DashboardLayout

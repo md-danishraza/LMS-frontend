@@ -18,7 +18,7 @@ function CompletionPage() {
   const [pollingCount, setPollingCount] = useState(0);
 
   // Poll the backend for the order status
-  const { data, error, isError } = useGetOrderStatusQuery(
+  const { data, isError } = useGetOrderStatusQuery(
     { userId: user?.id!, orderId: orderId! },
     {
       pollingInterval: 3000, // Check every 3 seconds
