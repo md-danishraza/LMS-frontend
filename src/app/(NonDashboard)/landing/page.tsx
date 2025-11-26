@@ -179,15 +179,15 @@ export default Landing
 
 const LoadingSkeleton = () => {
     return (
-      <div className="w-3/4">
+      <div className="w-full">
         <div className="flex justify-between items-center mt-12 h-[500px] rounded-lg bg-customgreys-secondarybg">
-          <div className="basis-1/2 px-16 mx-auto">
+          <div className="basis-1/2 px-0 sm:px-16 mx-auto">
             <Skeleton className="h-8 w-48 mb-4" />
-            <Skeleton className="h-4 w-96 mb-2" />
+            <Skeleton className="h-4 w-24 mb-2" />
             <Skeleton className="h-4 w-72 mb-8" />
             <Skeleton className="w-40 h-10" />
           </div>
-          <Skeleton className="basis-1/2 h-full rounded-r-lg" />
+          <Skeleton className=" smbasis-1/2 h-full rounded-r-lg" />
         </div>
   
         <div className="mx-auto py-12 mt-10">

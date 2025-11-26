@@ -22,6 +22,8 @@ import {
   PanelLeft,
   Settings,
   User,
+  Calendar,
+  Video
 } from "lucide-react"
 import { Logo } from './Logo'
 import Link from 'next/link'
@@ -58,12 +60,14 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
   const navLinks = {
     student: [
       { icon: BookOpen, label: "Courses", href: "/user/courses" },
+      { icon: Calendar, label: 'Sessions', href: '/user/sessions' },
       { icon: Briefcase, label: "Billing", href: "/user/billing" },
       { icon: User, label: "Profile", href: "/user/profile" },
       { icon: Settings, label: "Settings", href: "/user/settings" },
     ],
     teacher: [
       { icon: BookOpen, label: "Courses", href: "/teacher/courses" },
+      { icon: Calendar, label: 'Sessions', href: '/teacher/sessions' },
       { icon: IndianRupee, label: "Billing", href: "/teacher/billing" },
       { icon: User, label: "Profile", href: "/teacher/profile" },
       { icon: Settings, label: "Settings", href: "/teacher/settings" },
