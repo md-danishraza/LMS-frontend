@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { Loader2, Mic, Video, PhoneOff, Send, MicOff, VideoOff, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -100,12 +100,24 @@ function AgoraWrapper({ sessionId, token, uid, user, initialChatHistory }: any) 
 // --- 3. SESSION ROOM (The Actual UI) ---
 function SessionRoom({ sessionId, token, uid, user, initialChatHistory }: any) {
   const router = useRouter();
+  // get clerk token
+  const { getToken } = useAuth();
+
+  const appId = process.env.NEXT_PUBLIC_AGORA_APP_ID;
+    // Safety Check
+  if (!appId) {
+    return (
+      <div className="flex h-full items-center justify-center text-destructive">
+        Error: Agora App ID is missing in environment variables.
+      </div>
+    );
+  }
   
   // -- Agora Hooks --
   const { isLoading: isJoining } = useJoin(
-    { appid: process.env.NEXT_PUBLIC_AGORA_APP_ID!, channel: sessionId, token, uid }
+    { appid: appId, channel: sessionId, token, uid }
   );
-  
+
   const { localMicrophoneTrack } = useLocalMicrophoneTrack();
   const { localCameraTrack } = useLocalCameraTrack();
   
@@ -126,27 +138,40 @@ const scrollRef = useRef<HTMLDivElement>(null);
 
   // -- Chat Logic (Socket.io) --
   useEffect(() => {
-      // Initialize Socket.io
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8001";
-    const newSocket = io(baseUrl);
-    
-    setSocket(newSocket);
+    // 1. Declare the variable OUTSIDE the async function
+    let socketInstance: Socket | null = null;
 
-    newSocket.emit("joinRoom", { sessionId });
+    const initSocket = async () => {
+      const token = await getToken();
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8001"
+      
+      // 2. Assign to the outer variable
+      socketInstance = io(baseUrl, {
+        auth: { token: token } 
+      });
+      
+      setSocket(socketInstance);
 
-    newSocket.on("newMessage", (message) => {
-      setMessages((prev) => [...prev, message]);
-    });
+      socketInstance.emit("joinRoom", { sessionId });
 
-    // Load initial history
-    if (initialChatHistory) {
-      setMessages(initialChatHistory);
-    }
+      socketInstance.on("newMessage", (message) => {
+        setMessages((prev) => [...prev, message]);
+      });
 
-    return () => {
-      newSocket.disconnect();
+      if (initialChatHistory) {
+        setMessages(initialChatHistory);
+      }
     };
-  }, [sessionId, initialChatHistory]);
+
+    initSocket();
+
+    // 3. Cleanup using the outer variable
+    return () => {
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
+    };
+  }, [sessionId, initialChatHistory, getToken]);
 
   // 2. auto-scroll useEffect
   useEffect(() => {
@@ -269,7 +294,7 @@ const scrollRef = useRef<HTMLDivElement>(null);
       </div>
 
       {/* --- RIGHT: CHAT AREA --- */}
-      <Card className="w-full lg:w-96 flex flex-col h-full border shadow-sm overflow-hidden">
+      <Card className="w-full lg:w-96 flex flex-col min-h-[400px] h-full border shadow-sm overflow-hidden">
         {/* Header */}
         <div className="p-4 border-b font-semibold bg-muted/30 flex justify-between items-center shrink-0">
           <span>Session Chat</span>

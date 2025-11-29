@@ -41,3 +41,14 @@ export const chapterSchema = z.object({
 });
 
 export type ChapterFormData = z.infer<typeof chapterSchema>;
+
+// contact page
+// 1. Define Zod Schema
+export const contactSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.email("Please enter a valid email address"),
+  subject: z.string("Please select a subject"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+export type ContactFormValues = z.infer<typeof contactSchema>;

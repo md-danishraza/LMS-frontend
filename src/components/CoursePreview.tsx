@@ -45,7 +45,7 @@ const CoursePreview = ({ course }: {course:Course}) => {
               <div className="flex items-center justify-between text-xl font-bold">
                 <span>Total Price:</span>
                 <span className="text-primary">
-                  ${course.price?.toFixed(2)}
+                  ₹{course.price?.toFixed(2)}
                 </span>
               </div>
             </div>

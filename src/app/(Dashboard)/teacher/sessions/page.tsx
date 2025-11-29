@@ -34,17 +34,21 @@ export default function TeacherSessionsPage() {
   // 3. Process and split sessions
   const { upcomingSessions, pastSessions } = useMemo(() => {
     if (!sessions) return { upcomingSessions: [], pastSessions: [] };
-
-    const now = new Date();
+  
+    // Create a reference date for "Start of Today"
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+  
     const upcoming: any[] = [];
     const past: any[] = [];
-
+  
     sessions.forEach((session) => {
       const sessionDate = new Date(session.date);
+      
       // Find course title
       const course = courses?.find(c => c.courseId === session.courseId);
       const courseTitle = course?.title || 'Unknown Course';
-
+  
       // Combine session data with UI-ready details
       const sessionWithDetails = {
         ...session,
@@ -52,25 +56,22 @@ export default function TeacherSessionsPage() {
         studentName: 'Student', 
         studentAvatar: '',
       };
-
-      // --- FIX: Better Date Logic ---
-      const isFuture = sessionDate > now;
-      const isToday = sessionDate.toDateString() === now.toDateString();
-
-      // If it's in the future OR it is today, we show it in "Upcoming"
-      // so the teacher can actually join it.
-      if (isFuture || isToday) {
+  
+      // --- FIX: Logic Logic ---
+      // If the session is Today (any time) or Future, it goes to Upcoming.
+      // >= comparisons work perfectly because we reset 'startOfToday' to 00:00:00.
+      if (sessionDate >= startOfToday) {
         upcoming.push(sessionWithDetails);
       } else {
         past.push(sessionWithDetails);
       }
     });
-
+  
     // Sort upcoming by date (soonest first)
     upcoming.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     // Sort past by date (most recent first)
     past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
+  
     return { upcomingSessions: upcoming, pastSessions: past };
   }, [sessions, courses]);
 

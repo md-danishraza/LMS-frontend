@@ -1,7 +1,8 @@
-import React from 'react'
-import Link from 'next/link';
-function page() {
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
+export default function LicensingPage() {
   const libraries = [
     {
       name: "Next.js",
@@ -34,6 +35,26 @@ function page() {
       license: "ISC License",
     },
     {
+      name: "Clerk",
+      href: "https://github.com/clerk/javascript/blob/main/LICENSE",
+      license: "MIT License",
+    },
+    {
+      name: "Redux Toolkit",
+      href: "https://github.com/reduxjs/redux-toolkit/blob/master/LICENSE",
+      license: "MIT License",
+    },
+    {
+      name: "React Hook Form",
+      href: "https://github.com/react-hook-form/react-hook-form/blob/master/LICENSE",
+      license: "MIT License",
+    },
+    {
+      name: "Zod",
+      href: "https://github.com/colinhacks/zod/blob/master/LICENSE",
+      license: "MIT License",
+    },
+    {
       name: "Dynamoose",
       href: "https://github.com/dynamoose/dynamoose/blob/main/LICENSE",
       license: "MIT License",
@@ -44,15 +65,54 @@ function page() {
       license: "Apache-2.0 License",
     },
     {
+      name: "Agora RTC React",
+      href: "https://github.com/AgoraIO-Extensions/agora-rtc-react/blob/main/LICENSE",
+      license: "MIT License",
+    },
+    {
+      name: "Socket.IO Client",
+      href: "https://github.com/socketio/socket.io-client/blob/main/LICENSE",
+      license: "MIT License",
+    },
+    {
+      name: "Resend",
+      href: "https://github.com/resend/resend-node/blob/main/LICENSE",
+      license: "MIT License",
+    },
+    {
+      name: "React Player",
+      href: "https://github.com/cookpete/react-player/blob/master/LICENSE",
+      license: "MIT License",
+    },
+    {
+      name: "Sonner",
+      href: "https://github.com/emilkowalski/sonner/blob/main/LICENSE",
+      license: "MIT License",
+    },
+    {
       name: "next-themes",
       href: "https://github.com/pacocoursey/next-themes/blob/main/LICENSE",
       license: "MIT License",
+    },
+    {
+      name: "ProLearn Repository",
+      href: "https://github.com/md-danishraza?tab=repositories&q=lms",
+      license: "Project Source Code",
     },
   ];
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-20">
-      <h1 className="mb-12 text-center text-4xl font-bold font-primary tracking-tighter sm:text-5xl">
+      <div className="mb-8">
+        <Button variant="ghost" asChild className="pl-0 hover:pl-2 transition-all">
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
+        </Button>
+      </div>
+
+      <h1 className="mb-12 text-center text-4xl font-extrabold tracking-tighter sm:text-5xl">
         License & Acknowledgements
       </h1>
 
@@ -135,5 +195,3 @@ function page() {
     </main>
   );
 }
-
-export default page

@@ -52,17 +52,19 @@ export default function StudentSessionsPage() {
   const handleSchedule = async () => {
     if (!date || !selectedCourse || !user) return;
 
-    const scheduledDate = new Date(date);
-
-    // setting timings to be end of day for both current date and future date
-    scheduledDate.setHours(23, 59, 59, 999);
+   // Create a new date object from the selection
+   const scheduledDate = new Date(date);
+    
+   // FORCE END OF DAY: Set time to 23:59:59 (11:59 PM)
+   // This applies to BOTH "Today" and Future dates
+   scheduledDate.setHours(23, 59, 59, 999);
 
     try {
       await createSession({
         studentId: user.id,
         teacherId: selectedCourse.teacherId, // Accessing teacherId from course
         courseId: selectedCourse.courseId,
-        date: date.toISOString(),
+        date: scheduledDate.toISOString(),
       }).unwrap();
 
       toast.success("Session scheduled successfully!");
@@ -93,12 +95,16 @@ export default function StudentSessionsPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {courses?.map((course) => {
-          // Check if this course has an active session in the fetched data
-          // Filter for 'scheduled' sessions specifically
-          const activeSession = sessions?.find(
-            (s) => s.courseId === course.courseId && s.status === 'scheduled'
-          );
-          
+          // Check if this course has an active session
+        const activeSession = sessions?.find((s) => {
+            const isScheduled = s.courseId === course.courseId && s.status === "scheduled";
+            const sessionDate = new Date(s.date);
+            const now = new Date();
+            
+            // Logic: It is active ONLY if it is in the future
+            // Since you set scheduledDate to 23:59:59, this safely covers "Today"
+            return isScheduled && sessionDate > now;
+          });
           return (
             <Card key={course.courseId} className="flex flex-col justify-between hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
