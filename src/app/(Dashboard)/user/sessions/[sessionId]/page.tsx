@@ -121,8 +121,19 @@ function SessionRoom({ sessionId, token, uid, user, initialChatHistory }: any) {
   const { localMicrophoneTrack } = useLocalMicrophoneTrack();
   const { localCameraTrack } = useLocalCameraTrack();
   
-  // Publish local tracks
-  usePublish([localMicrophoneTrack, localCameraTrack]);
+  // This prevents publishing "empty" tracks which can look like mute
+  const [readyToPublish, setReadyToPublish] = useState(false);
+  
+  useEffect(() => {
+    if (localMicrophoneTrack && localCameraTrack) {
+      setReadyToPublish(true);
+    }
+  }, [localMicrophoneTrack, localCameraTrack]);
+
+  usePublish([
+    readyToPublish ? localMicrophoneTrack : null,
+    readyToPublish ? localCameraTrack : null
+  ]);
 
   const remoteUsers = useRemoteUsers();
 
@@ -218,7 +229,7 @@ const scrollRef = useRef<HTMLDivElement>(null);
   };
 
   return (
-    <div className="h-[calc(100vh-100px)] flex flex-col lg:flex-row gap-4 p-4">
+    <div className="min-h-[calc(100vh-100px)] flex flex-col lg:flex-row gap-4 p-4">
       
       {/* --- LEFT: VIDEO AREA --- */}
       <div className="flex-1 flex flex-col gap-4 relative min-h-[50vh] lg:min-h-0">

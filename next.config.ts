@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // 1. Disable Strict Mode to stop Agora double-joining
+  reactStrictMode: false,
+
   /* config options here */
   images: {
     remotePatterns: [

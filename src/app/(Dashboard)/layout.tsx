@@ -63,7 +63,6 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
             <Footer />
           </main>
         </div>
-        {/* {isCoursePage && <ChapterSidebar />} */}
       </div>
     </SidebarProvider>
   )

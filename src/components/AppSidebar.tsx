@@ -34,7 +34,7 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
   // if (isCoursePage) return null;
 
   // Get both state and setters from sidebar context
-  const { setOpen } = useSidebar();
+  const { setOpen,toggleSidebar,isMobile,setOpenMobile } = useSidebar();
 
   // Force collapse on course pages
   useEffect(() => {
@@ -53,8 +53,6 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
   // Get current pathname to highlight active navigation links
   const pathname = usePathname()
 
-  // Get toggle function from shadcn sidebar context to collapse/expand sidebar
-  const { toggleSidebar } = useSidebar()
 
   // Define navigation links for different user types (student/teacher)
   const navLinks = {
@@ -86,6 +84,12 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
   // Select appropriate navigation links based on user type
   const currentNavLinks = navLinks[userType]
 
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }
   return (
     <Sidebar
       
@@ -152,6 +156,8 @@ function AppSidebar({ isCoursePage }: { isCoursePage: boolean }) {
                     href={link.href}
                     className="flex items-center w-full"
                     scroll={false} // Prevent scroll to top on navigation
+                    // Close sidebar on click (for mobile)
+                    onClick={handleLinkClick}
                   >
                     {/* Icon with conditional theming based on active state */}
                     <link.icon

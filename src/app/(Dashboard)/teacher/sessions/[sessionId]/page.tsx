@@ -122,9 +122,20 @@ function SessionRoom({ sessionId, token, uid, user, initialChatHistory }: any) {
   
   const { localMicrophoneTrack } = useLocalMicrophoneTrack();
   const { localCameraTrack } = useLocalCameraTrack();
+
+  // This prevents publishing "empty" tracks which can look like mute
+  const [readyToPublish, setReadyToPublish] = useState(false);
   
-  // Publish local tracks
-  usePublish([localMicrophoneTrack, localCameraTrack]);
+  useEffect(() => {
+    if (localMicrophoneTrack && localCameraTrack) {
+      setReadyToPublish(true);
+    }
+  }, [localMicrophoneTrack, localCameraTrack]);
+
+  usePublish([
+    readyToPublish ? localMicrophoneTrack : null,
+    readyToPublish ? localCameraTrack : null
+  ]);
 
   const remoteUsers = useRemoteUsers();
 
@@ -237,7 +248,7 @@ function SessionRoom({ sessionId, token, uid, user, initialChatHistory }: any) {
   };
 
   return (
-    <div className="h-[calc(100vh-100px)] flex flex-col p-4 gap-4">
+    <div className="min-h-[calc(100vh-100px)] flex flex-col p-4 gap-4">
       {/* Header / Back Button */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="sm" onClick={handleLeave} className="gap-2">
