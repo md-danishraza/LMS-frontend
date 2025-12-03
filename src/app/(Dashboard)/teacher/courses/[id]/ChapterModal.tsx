@@ -77,6 +77,15 @@ const ChapterModal = () => {
 
   const onSubmit = (data: ChapterFormData) => {
     if (selectedSectionIndex === null) return;
+    
+    // max video size 100mb
+    const MAX_FILE_SIZE = 100 * 1024 * 1024;
+    if (data.video && data.video instanceof File) {
+      if (data.video.size > MAX_FILE_SIZE) {
+        toast.error("Video file is too large. Max limit is 100MB. (Testing)");
+        return;
+      }
+    }
 
     const newChapter: Chapter = {
       chapterId: chapter?.chapterId || uuidv4(),
