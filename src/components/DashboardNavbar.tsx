@@ -46,7 +46,7 @@ function DashboardNavbar({ isCoursePage }: { isCoursePage: boolean }) {
           />
           
           {/* Search bar is hidden on mobile, visible on desktop */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="items-center gap-4">
             <div className="relative group">
               <Link
                 href={`/search`}
@@ -108,6 +108,7 @@ function DashboardNavbar({ isCoursePage }: { isCoursePage: boolean }) {
                   userButtonPopoverActionButton__signOut:
                     '!text-destructive hover:bg-destructive/10 hover:!text-destructive',
                   userButtonPopoverFooter: 'hidden',
+                  userButtonOuterIdentifier: "hidden md:block",
                   // ...all your other custom styles...
                 },
                 variables: {

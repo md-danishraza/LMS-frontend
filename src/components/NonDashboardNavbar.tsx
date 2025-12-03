@@ -53,8 +53,8 @@ function NonDashboardNavbar() {
     <nav className='w-full px-4 flex justify-center bg-background border-b shadow
     '>
             {/* left side */}
-        <div className='flex justify-between items-center w-3/4 py-8 '>
-            <div className='flex justify-between items-center gap-14'>
+        <div className='flex justify-between items-center w-3/4 py-4 '>
+            <div className='flex justify-between items-center gap-1 md:gap-8'>
             {/* brand logo */}
             {/* <Link href={`/`} className='font-bold text-lg text-primary sm:text-xl hover:text-secondary'>
             LMS
@@ -62,11 +62,11 @@ function NonDashboardNavbar() {
             <Logo/>
 
             {/* --- DYNAMIC BUTTON --- */}
-              <div className="hidden items-center gap-4 md:flex">
+              <div className=" items-center gap-4 md:flex">
                 <div className="relative group">
                   <Link
                     href={navbarLink.href}
-                    className="pl-10 sm:pl-14 pr-6 sm:pr-10 py-3 sm:py-4 rounded-xl bg-muted hover:text-muted-foreground transition-all duration-300 text-sm sm:text-base"
+                    className="pl-10 sm:pl-14 pr-3 sm:pr-10 py-3 sm:py-4 rounded-xl bg-muted hover:text-muted-foreground transition-all duration-300 text-sm sm:text-base"
                   >
                     <span className="hidden sm:inline">{navbarLink.label}</span>
                     <span className="sm:hidden">
@@ -129,7 +129,7 @@ function NonDashboardNavbar() {
                 
                 // User name next to avatar
                 userButtonOuterIdentifier: 
-                'text-sm font-primary font-medium text-foreground whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]',
+                'hidden md:block text-sm font-primary font-medium text-foreground whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]',
 
                 // Dropdown menu - force text colors
                 userButtonPopoverCard: 

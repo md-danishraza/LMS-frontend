@@ -246,156 +246,160 @@ function SessionRoom({ sessionId, token, uid, user, initialChatHistory }: any) {
         router.push('/teacher/sessions'); 
     }
   };
-
-  return (
-    <div className="min-h-[calc(100vh-100px)] flex flex-col p-4 gap-4">
-      {/* Header / Back Button */}
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" onClick={handleLeave} className="gap-2">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Button>
-        <div className="text-sm font-medium text-muted-foreground">
-          Session ID: {sessionId}
-        </div>
-      </div>
-
-      <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0">
+    return (
+      // 1. Main Wrapper:
+      // Mobile: Allow page scroll if content is tall.
+      // Desktop: Fixed height (viewport - header), no page scroll.
+      <div className="flex flex-col p-4 gap-4 lg:h-[calc(100vh-100px)] lg:overflow-hidden">
         
-        {/* --- LEFT: VIDEO AREA --- */}
-        <div className="flex-1 flex flex-col gap-4 relative min-h-[50vh] lg:min-h-0">
-          <Card className="flex-1 bg-zinc-950 relative overflow-hidden rounded-xl border-zinc-800">
-            
-            {/* Remote Video (Student) */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              {remoteUsers.length > 0 ? (
-                <div className="w-full h-full grid grid-cols-1 gap-2 p-2">
-                  {remoteUsers.map((remoteUser) => (
-                    <div key={remoteUser.uid} className="relative w-full h-full bg-zinc-900 rounded-lg overflow-hidden">
-                      <RemoteUser user={remoteUser} style={{ width: '100%', height: '100%' }} />
-                      <div className="absolute bottom-4 left-4 bg-black/50 px-2 py-1 rounded text-white text-sm">
-                        Student (Remote)
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-zinc-500 flex flex-col items-center gap-2">
-                  {isJoining ? (
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                  ) : (
-                    <UserIcon className="h-16 w-16 opacity-20" />
-                  )}
-                  <p>Waiting for student to join...</p>
-                </div>
-              )}
-            </div>
-
-            {/* Local Video (Teacher - PIP) */}
-            <div className="absolute top-4 right-4 w-48 h-36 bg-zinc-900 rounded-lg border border-zinc-700 shadow-xl overflow-hidden z-10">
-              {cameraOn && localCameraTrack ? (
-                <LocalVideoTrack track={localCameraTrack} play style={{ width: '100%', height: '100%' }} />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-zinc-800 text-zinc-500 text-xs">
-                  Camera Off
-                </div>
-              )}
-              <div className="absolute bottom-1 left-2 text-[10px] text-white bg-black/50 px-1 rounded">
-                You (Teacher)
-              </div>
-            </div>
-
-            {/* Controls Overlay */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 p-3 bg-zinc-900/90 backdrop-blur-md rounded-full border border-zinc-800 z-20">
-              <Button 
-                variant={micOn ? "secondary" : "destructive"} 
-                size="icon" 
-                className="rounded-full"
-                onClick={toggleMic}
-              >
-                {micOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
-              </Button>
-              <Button 
-                variant={cameraOn ? "secondary" : "destructive"} 
-                size="icon" 
-                className="rounded-full"
-                onClick={toggleCamera}
-              >
-                {cameraOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
-              </Button>
-             {/* End Call Button */}
-            <Button 
-            variant="destructive" 
-            size="icon" 
-            className="rounded-full px-8"
-            onClick={handleLeave} // <--- Call our new handler
-            title="End Session"
-            >
-            <PhoneOff className="h-5 w-5" />
-            </Button>
-
-            </div>
-          </Card>
-        </div>
-
-        {/* --- RIGHT: CHAT AREA --- */}
-      <Card className="w-full lg:w-96 flex flex-col min-h-[400px] h-full border shadow-sm overflow-hidden">
-        {/* Header */}
-        <div className="p-4 border-b font-semibold bg-muted/30 flex justify-between items-center shrink-0">
-          <span>Session Chat</span>
-          <div 
-            className={cn("h-2 w-2 rounded-full", socket?.connected ? "bg-green-500" : "bg-yellow-500")} 
-            title={socket?.connected ? "Connected" : "Connecting..."}
-          />
-        </div>
-        
-        {/* Messages List - Replaced ScrollArea with robust div */}
-        <div 
-          ref={scrollRef} 
-          className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0"
-        >
-          {messages.map((msg, i) => {
-            const isMe = msg.senderId === user.id;
-            return (
-              <div key={i} className={cn("flex flex-col", isMe ? "items-end" : "items-start")}>
-                <div className={cn(
-                  "px-3 py-2 rounded-lg text-sm max-w-[85%] break-words",
-                  isMe 
-                    ? "bg-primary text-primary-foreground rounded-tr-none" 
-                    : "bg-secondary text-secondary-foreground rounded-tl-none"
-                )}>
-                  {msg.text}
-                </div>
-                <span className="text-[10px] text-muted-foreground mt-1 mx-1">
-                  {msg.senderName} • {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-            );
-          })}
-          {/* Invisible element to anchor scroll if needed, though scrollTop usually suffices */}
-          {messages.length === 0 && (
-             <div className="h-full flex items-center justify-center text-muted-foreground text-sm opacity-50">
-                No messages yet. Say hi!
-             </div>
-          )}
-        </div>
-
-        {/* Input Area */}
-        <form onSubmit={handleSendMessage} className="p-3 border-t flex gap-2 bg-background shrink-0">
-          <Input 
-            placeholder="Type a message..." 
-            className="flex-1" 
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <Button type="submit" size="icon" disabled={!newMessage.trim()}>
-            <Send className="h-4 w-4" />
+        {/* Header / Back Button */}
+        <div className="flex items-center justify-between shrink-0">
+          <Button variant="ghost" size="sm" onClick={handleLeave} className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
           </Button>
-        </form>
-      </Card>
+          <div className="text-sm font-medium text-muted-foreground">
+            Session ID: {sessionId}
+          </div>
+        </div>
+  
+        {/* 2. Content Container */}
+        <div className="flex flex-col gap-4 lg:flex-row lg:flex-1 lg:min-h-0">
+          
+          {/* --- LEFT: VIDEO AREA --- */}
+          {/* Mobile: Fixed height (50vh or 400px) so it doesn't squash. */}
+          {/* Desktop: Flex-1 (take remaining width) and full height. */}
+          <div className="flex-col gap-4 relative w-full h-[500px] min-h-[500px] lg:h-auto lg:flex-1 lg:flex">
+            <Card className="flex-1 bg-zinc-950 relative overflow-hidden rounded-xl border-zinc-800 w-full h-full">
+              
+              {/* Remote Video (Student) */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {remoteUsers.length > 0 ? (
+                  <div className="w-full h-full grid grid-cols-1 gap-2 p-2">
+                    {remoteUsers.map((remoteUser) => (
+                      <div key={remoteUser.uid} className="relative w-full h-full bg-zinc-900 rounded-lg overflow-hidden">
+                        <RemoteUser user={remoteUser} style={{ width: '100%', height: '100%' }} />
+                        <div className="absolute bottom-4 left-4 bg-black/50 px-2 py-1 rounded text-white text-sm">
+                          Student (Remote)
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-zinc-500 flex flex-col items-center gap-2">
+                    {isJoining ? (
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                    ) : (
+                      <UserIcon className="h-16 w-16 opacity-20" />
+                    )}
+                    <p>Waiting for student to join...</p>
+                  </div>
+                )}
+              </div>
+  
+              {/* Local Video (Teacher - PIP) */}
+              <div className="absolute top-4 right-4 w-32 h-24  bg-zinc-900 rounded-lg border border-zinc-700 shadow-xl overflow-hidden z-10">
+                {cameraOn && localCameraTrack ? (
+                  <LocalVideoTrack track={localCameraTrack} play style={{ width: '100%', height: '100%' }} />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-zinc-800 text-zinc-500 text-xs">
+                    Camera Off
+                  </div>
+                )}
+              </div>
+  
+              {/* Controls Overlay */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 p-3 bg-zinc-900/90 backdrop-blur-md rounded-full border border-zinc-800 z-20">
+                <Button 
+                  variant={micOn ? "secondary" : "destructive"} 
+                  size="icon" 
+                  className="rounded-full"
+                  onClick={toggleMic}
+                >
+                  {micOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+                </Button>
+                <Button 
+                  variant={cameraOn ? "secondary" : "destructive"} 
+                  size="icon" 
+                  className="rounded-full"
+                  onClick={toggleCamera}
+                >
+                  {cameraOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="icon" 
+                  className="rounded-full px-8"
+                  onClick={handleLeave}
+                  title="End Session"
+                >
+                  <PhoneOff className="h-5 w-5" />
+                </Button>
+              </div>
+            </Card>
+          </div>
+  
+          {/* --- RIGHT: CHAT AREA --- */}
+          {/* Mobile: Fixed height (500px) so it's usable. */}
+          {/* Desktop: Fixed width (96) and full height (h-auto/full). */}
+          <Card className="w-full h-[500px] flex flex-col border shadow-sm overflow-hidden lg:w-96 lg:h-auto">
+            {/* Header */}
+            <div className="p-4 border-b font-semibold bg-muted/30 flex justify-between items-center shrink-0">
+              <span>Session Chat</span>
+              <div 
+                className={cn("h-2 w-2 rounded-full", socket?.connected ? "bg-green-500" : "bg-yellow-500")} 
+                title={socket?.connected ? "Connected" : "Connecting..."}
+              />
+            </div>
+            
+            {/* Messages List */}
+            {/* flex-1 + min-h-0 is crucial for internal scrolling */}
+            <div 
+              ref={scrollRef} 
+              className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0 bg-background"
+            >
+              {messages.map((msg, i) => {
+                const isMe = msg.senderId === user.id;
+                return (
+                  <div key={i} className={cn("flex flex-col", isMe ? "items-end" : "items-start")}>
+                    <div className={cn(
+                      "px-3 py-2 rounded-lg text-sm max-w-[85%] break-words",
+                      isMe 
+                        ? "bg-primary text-primary-foreground rounded-tr-none" 
+                        : "bg-secondary text-secondary-foreground rounded-tl-none"
+                    )}>
+                      {msg.text}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground mt-1 mx-1">
+                      {msg.senderName} • {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                );
+              })}
+              {messages.length === 0 && (
+                <div className="h-full flex items-center justify-center text-muted-foreground text-sm opacity-50">
+                   No messages yet. Say hi!
+                </div>
+              )}
+            </div>
+  
+            {/* Input Area */}
+            <form onSubmit={handleSendMessage} className="p-3 border-t flex gap-2 bg-background shrink-0">
+              <Input 
+                placeholder="Type a message..." 
+                className="flex-1" 
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+              <Button type="submit" size="icon" disabled={!newMessage.trim()}>
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
+          </Card>
+  
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 
